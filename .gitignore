@@ -1,0 +1,46 @@
+# macOS / OS noise
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node / frontend
+node_modules/
+.pnpm-store/
+.next/
+.turbo/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+*.py[cod]
+
+# Local data and artifacts
+.data/
+artifacts/
+tmp/
+
+# Secrets and local overrides
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Logs
+*.log

@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: soil-engine
+Version: 0.1.0
+Summary: Pure Python scientific simulation engine for the Bio Soil platform.
+Requires-Python: >=3.12
+Requires-Dist: networkx>=3.4.0
+Requires-Dist: numpy>=2.1.0
+Requires-Dist: pandas>=2.2.0
+Requires-Dist: pydantic>=2.10.0
+Requires-Dist: scipy>=1.14.0
+Requires-Dist: simpleeval>=0.9.13
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3.0; extra == "dev"
+Requires-Dist: pytest-benchmark>=5.1.0; extra == "dev"
+Requires-Dist: ruff>=0.8.0; extra == "dev"

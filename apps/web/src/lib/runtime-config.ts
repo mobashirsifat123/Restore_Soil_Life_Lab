@@ -1,0 +1,5 @@
+const defaultApiBaseUrl = "http://127.0.0.1:8000";
+
+export function getApiBaseUrl(): string {
+  return (process.env.API_BASE_URL ?? defaultApiBaseUrl).replace(/\/$/, "");
+}

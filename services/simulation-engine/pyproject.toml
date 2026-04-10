@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "soil-engine"
+version = "0.1.0"
+description = "Pure Python scientific simulation engine for the Bio Soil platform."
+requires-python = ">=3.12"
+dependencies = [
+  "networkx>=3.4.0",
+  "numpy>=2.1.0",
+  "pandas>=2.2.0",
+  "pydantic>=2.10.0",
+  "scipy>=1.14.0",
+  "simpleeval>=0.9.13",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+  "pytest-benchmark>=5.1.0",
+  "ruff>=0.8.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["soil_engine*"]
+exclude = ["tests*", "notebooks*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501", "UP037"]

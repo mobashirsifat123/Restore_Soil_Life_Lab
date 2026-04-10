@@ -1,0 +1,16 @@
+.next
+.turbo
+coverage
+dist
+node_modules
+.pnpm-store
+.data
+artifacts
+tmp
+apps/web/playwright-report
+apps/web/test-results
+pnpm-lock.yaml
+services/**/__pycache__
+services/**/.pytest_cache
+services/**/.ruff_cache
+services/**/.venv

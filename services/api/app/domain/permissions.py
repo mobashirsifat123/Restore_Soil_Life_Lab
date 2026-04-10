@@ -1,0 +1,11 @@
+class Permissions:
+    PROJECT_READ = "projects:read"
+    PROJECT_WRITE = "projects:write"
+    SAMPLE_READ = "soil_samples:read"
+    SAMPLE_WRITE = "soil_samples:write"
+    SCENARIO_READ = "scenarios:read"
+    SCENARIO_WRITE = "scenarios:write"
+    RUN_SUBMIT = "runs:write"
+    RUN_READ = "runs:read"
+    REPORT_READ = "reports:read"
+    REPORT_WRITE = "reports:write"

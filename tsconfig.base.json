@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "typeRoots": [
+      "./node_modules/.pnpm/@types+react@19.2.14/node_modules/@types",
+      "./node_modules/.pnpm/@types+react-dom@19.2.3_@types+react@19.2.14/node_modules/@types",
+      "./node_modules/@types"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@bio/api-client": ["packages/api-client/src/index.ts"],
+      "@bio/design-tokens": ["packages/design-tokens/src/index.ts"],
+      "@bio/ui": ["packages/ui/src/index.ts"]
+    }
+  }
+}

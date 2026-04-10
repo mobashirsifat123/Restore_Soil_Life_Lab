@@ -1,0 +1,79 @@
+{
+  "inputSchemaVersion": "1.0.0",
+  "foodWeb": {
+    "definitionId": "00000000-0000-7000-0000-000000000301",
+    "version": 1,
+    "nodes": [
+      {
+        "key": "detritus",
+        "label": "Detritus",
+        "trophicGroup": "detritus",
+        "biomassCarbon": 14.0,
+        "biomassNitrogen": 3.0,
+        "isDetritus": true
+      },
+      {
+        "key": "fungi",
+        "label": "Fungi",
+        "trophicGroup": "fungus",
+        "biomassCarbon": 5.0,
+        "biomassNitrogen": 1.2
+      },
+      {
+        "key": "nematodes",
+        "label": "Nematodes",
+        "trophicGroup": "grazer",
+        "biomassCarbon": 2.0,
+        "biomassNitrogen": 0.6
+      }
+    ],
+    "links": [
+      {
+        "source": "detritus",
+        "target": "fungi",
+        "weight": 0.7
+      },
+      {
+        "source": "fungi",
+        "target": "nematodes",
+        "weight": 0.4
+      }
+    ]
+  },
+  "soilSample": {
+    "sampleId": "00000000-0000-7000-0000-000000000302",
+    "sampleCode": "S-BASELINE-1",
+    "version": 1,
+    "measurements": {
+      "ph": 6.7,
+      "moisture": 0.28,
+      "organicMatter": 4.1
+    }
+  },
+  "parameterSet": {
+    "parameterSetId": "00000000-0000-7000-0000-000000000303",
+    "version": 3,
+    "name": "Baseline Parameters",
+    "parameters": {
+      "dynamic_decay_factor": 0.018,
+      "decomposition_constant": 0.024,
+      "initial_detritus_carbon": 14.0
+    }
+  },
+  "scenario": {
+    "scenarioId": "00000000-0000-7000-0000-000000000304",
+    "version": 2,
+    "name": "Baseline Scenario",
+    "configuration": {
+      "timeHorizonDays": 30,
+      "timeSteps": 5,
+      "decompositionDays": 21
+    }
+  },
+  "execution": {
+    "runId": "00000000-0000-7000-0000-000000000305",
+    "deterministic": true,
+    "randomSeed": 0,
+    "requestedModules": ["flux", "mineralization", "stability", "dynamics", "decomposition"]
+  }
+}

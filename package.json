@@ -1,0 +1,43 @@
+{
+  "name": "bio-lab",
+  "private": true,
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "bootstrap": "bash ./scripts/bootstrap-local.sh",
+    "build": "turbo run build --continue",
+    "db:migrate": "bash ./scripts/python-project.sh services/api alembic -c alembic.ini upgrade head",
+    "dev": "concurrently -k -n web,api -c cyan,green \"pnpm dev:web\" \"pnpm dev:api\"",
+    "dev:api": "bash ./scripts/python-project.sh services/api uvicorn app.main:app --reload --reload-dir app --host 0.0.0.0 --port 8000",
+    "dev:full": "concurrently -k -n web,api,worker -c cyan,green,yellow \"pnpm dev:web\" \"pnpm dev:api\" \"pnpm dev:worker\"",
+    "dev:stack": "docker compose -f infra/docker/compose.dev.yml up -d",
+    "dev:stack:down": "docker compose -f infra/docker/compose.dev.yml down",
+    "dev:web": "bash ./scripts/dev-web.sh",
+    "dev:worker": "bash ./scripts/python-project.sh services/worker python -m app.main",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "gen:api-client": "pnpm --filter @bio/api-client generate",
+    "lint": "pnpm lint:js && pnpm lint:py",
+    "lint:js": "eslint . --max-warnings=0",
+    "lint:py": "bash ./scripts/python-project.sh services/api ruff check . && bash ./scripts/python-project.sh services/worker ruff check . && bash ./scripts/python-project.sh services/simulation-engine ruff check .",
+    "preflight:prod": "bash ./scripts/preflight-prod.sh",
+    "test": "pnpm test:js && pnpm test:py",
+    "test:js": "pnpm --filter @bio/web --if-present test && pnpm --filter @bio/api-client --if-present test && pnpm --filter @bio/ui --if-present test && pnpm --filter @bio/design-tokens --if-present test",
+    "test:py": "bash ./scripts/python-project.sh services/api pytest && bash ./scripts/python-project.sh services/worker pytest && bash ./scripts/python-project.sh services/simulation-engine pytest",
+    "test:engine": "bash ./scripts/python-project.sh services/simulation-engine pytest",
+    "typecheck": "turbo run typecheck --continue"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "turbo": "^2.3.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.28.0"
+  }
+}

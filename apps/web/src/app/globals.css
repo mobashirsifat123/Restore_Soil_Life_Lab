@@ -1,0 +1,128 @@
+@import "../styles/theme.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  color: #1a1a14;
+  background: var(--site-paper);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 24%),
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.5), transparent 30%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+code,
+pre,
+.font-mono {
+  font-family: var(--font-jetbrains-mono), "Courier New", monospace;
+}
+
+a {
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.18s ease,
+    filter 0.18s ease;
+}
+
+* {
+  border-color: rgba(72, 85, 59, 0.14);
+}
+
+#__next,
+body > div:first-child {
+  position: relative;
+  z-index: 1;
+}
+
+pre {
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  background: #1a1f12;
+  padding: 1rem;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.75rem;
+  color: #e8e0cc;
+}
+
+::selection {
+  background: rgba(185, 120, 73, 0.25);
+}
+
+/* Scroll animation utility */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.65s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Staggered children */
+.stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 80ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 160ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 240ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 320ms;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 400ms;
+}
+
+/* Card hover lift */
+.card-hover {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 40px rgba(40, 52, 34, 0.13),
+    0 0 0 1px rgba(255, 255, 255, 0.16);
+}
