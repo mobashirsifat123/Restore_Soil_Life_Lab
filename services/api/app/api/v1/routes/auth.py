@@ -23,6 +23,11 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 AuthServiceDependency = Annotated[AuthService, Depends(get_auth_service)]
 
 
+def _should_set_secure_cookie(request: Request) -> bool:
+    settings = get_settings()
+    return settings.auth_session_secure_cookie and request.url.scheme == "https"
+
+
 @router.post(
     "/login",
     response_model=SessionResponse,
@@ -46,7 +51,7 @@ def login(
         value=session.session_token,
         httponly=True,
         max_age=settings.auth_session_ttl_hours * 60 * 60,
-        secure=settings.auth_session_secure_cookie,
+        secure=_should_set_secure_cookie(request),
         samesite="lax",
         path="/",
     )
@@ -76,7 +81,7 @@ def register(
         value=session.session_token,
         httponly=True,
         max_age=settings.auth_session_ttl_hours * 60 * 60,
-        secure=settings.auth_session_secure_cookie,
+        secure=_should_set_secure_cookie(request),
         samesite="lax",
         path="/",
     )
@@ -98,6 +103,8 @@ def forgot_password(
         payload=payload,
         user_agent=request.headers.get("user-agent"),
         ip_address=request.client.host if request.client else None,
+        frontend_origin=request.headers.get("origin"),
+        frontend_referer=request.headers.get("referer"),
     )
 
 
@@ -130,7 +137,7 @@ def logout(
     auth_service.logout(request)
     response.delete_cookie(
         key=settings.auth_session_cookie_name,
-        secure=settings.auth_session_secure_cookie,
+        secure=_should_set_secure_cookie(request),
         samesite="lax",
         path="/",
     )

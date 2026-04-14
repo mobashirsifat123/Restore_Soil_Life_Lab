@@ -200,6 +200,23 @@ def test_login_sets_session_cookie_and_session_endpoint_returns_identity(auth_cl
     )
 
 
+def test_login_does_not_mark_cookie_secure_for_http_requests(
+    auth_client,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("AUTH_SESSION_SECURE_COOKIE", "true")
+    get_settings.cache_clear()
+
+    response = auth_client.client.post(
+        "/api/v1/auth/login",
+        json={"email": "scientist@example.com", "password": "ScientistLocal2026!"},
+    )
+
+    assert response.status_code == 200
+    assert "bio_session=" in response.headers["set-cookie"]
+    assert "Secure" not in response.headers["set-cookie"]
+
+
 def test_login_rejects_requested_organization_without_membership(auth_client) -> None:
     response = auth_client.client.post(
         "/api/v1/auth/login",

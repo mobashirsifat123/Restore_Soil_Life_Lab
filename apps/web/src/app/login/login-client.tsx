@@ -6,10 +6,10 @@ import Link from "next/link";
 type ErrorEnvelope = {
   error?: { message?: string };
   message?: string;
-  developmentCode?: string | null;
+  developmentResetUrl?: string | null;
 };
 
-type AuthState = "login" | "signup" | "forgot_password" | "enter_code" | "reset_password";
+type AuthState = "login" | "signup" | "forgot_password" | "email_sent";
 
 export function LoginClient() {
   const [authState, setAuthState] = useState<AuthState>("login");
@@ -18,7 +18,7 @@ export function LoginClient() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [recoveryCode, setRecoveryCode] = useState("");
+  const [developmentResetUrl, setDevelopmentResetUrl] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +37,9 @@ export function LoginClient() {
     setSuccessMessage(null);
   }
 
+  function normalizeEmail(value: string) {
+    return value.trim().toLowerCase();
+  }
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isSubmitting) {
@@ -49,7 +52,7 @@ export function LoginClient() {
       const response = await fetch("/api/bio/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), password }),
+        body: JSON.stringify({ email: normalizeEmail(email), password }),
         credentials: "same-origin",
       });
 
@@ -60,7 +63,7 @@ export function LoginClient() {
         return;
       }
 
-      window.location.assign("/silksoil");
+      window.location.assign("/dashboard");
     } catch {
       setErrorMessage("Sign in failed. Please check your connection and try again.");
     } finally {
@@ -86,8 +89,8 @@ export function LoginClient() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
-          organization_name: organization.trim() || null,
-          email: email.trim(),
+          organizationName: organization.trim() || null,
+          email: normalizeEmail(email),
           password,
         }),
         credentials: "same-origin",
@@ -100,7 +103,7 @@ export function LoginClient() {
         return;
       }
 
-      window.location.assign("/silksoil");
+      window.location.assign("/dashboard");
     } catch {
       setErrorMessage("Registration failed because the service is unavailable right now.");
     } finally {
@@ -120,7 +123,7 @@ export function LoginClient() {
       const response = await fetch("/api/bio/auth/forgot-password", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ email: normalizeEmail(email) }),
         credentials: "same-origin",
       });
 
@@ -130,11 +133,9 @@ export function LoginClient() {
       }
 
       const body = (await response.json()) as ErrorEnvelope;
-      const devCode = body.developmentCode ? ` Development code: ${body.developmentCode}` : "";
-      setSuccessMessage(
-        `${body.message ?? `A 6-digit recovery code has been sent to ${email}.`}${devCode}`,
-      );
-      setAuthState("enter_code");
+      setDevelopmentResetUrl(body.developmentResetUrl ?? null);
+      setSuccessMessage(body.message ?? `If that account exists, a password reset link has been sent.`);
+      setAuthState("email_sent");
     } catch {
       setErrorMessage("Could not start password reset. Please try again.");
     } finally {
@@ -142,58 +143,11 @@ export function LoginClient() {
     }
   }
 
-  async function handleVerifyCode(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
-    if (recoveryCode.length === 6) {
-      setAuthState("reset_password");
-    } else {
-      setErrorMessage("Invalid code. Please enter a 6-digit code.");
-    }
-    setIsSubmitting(false);
-  }
-
-  async function handleResetPassword(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (isSubmitting) {
-      return;
-    }
-    setIsSubmitting(true);
-    resetFeedback();
-
-    try {
-      const response = await fetch("/api/bio/auth/reset-password", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim(),
-          code: recoveryCode.trim(),
-          newPassword: password,
-        }),
-        credentials: "same-origin",
-      });
-
-      if (!response.ok) {
-        setErrorMessage(await parseErrorMessage(response, "Password reset failed."));
-        return;
-      }
-
-      setSuccessMessage("Password successfully reset! You can now sign in.");
-      setAuthState("login");
-      setRecoveryCode("");
-      setPassword("");
-    } catch {
-      setErrorMessage("Password reset failed. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
   const switchState = (newState: AuthState) => {
     setAuthState(newState);
+    if (newState !== "email_sent") {
+      setDevelopmentResetUrl(null);
+    }
     resetFeedback();
   };
 
@@ -217,12 +171,17 @@ export function LoginClient() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
+              <label
+                htmlFor="login-email"
+                className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5"
+              >
                 Email Address
               </label>
               <input
+                id="login-email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
@@ -230,7 +189,10 @@ export function LoginClient() {
             </div>
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050]">
+                <label
+                  htmlFor="login-password"
+                  className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050]"
+                >
                   Password
                 </label>
                 <button
@@ -242,8 +204,10 @@ export function LoginClient() {
                 </button>
               </div>
               <input
+                id="login-password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
@@ -287,24 +251,34 @@ export function LoginClient() {
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
+                <label
+                  htmlFor="signup-name"
+                  className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5"
+                >
                   Full Name
                 </label>
                 <input
+                  id="signup-name"
                   type="text"
                   required
+                  autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
+                <label
+                  htmlFor="signup-organization"
+                  className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5"
+                >
                   Farm / Organization
                 </label>
                 <input
+                  id="signup-organization"
                   type="text"
                   placeholder="Optional"
+                  autoComplete="organization"
                   value={organization}
                   onChange={(e) => setOrganization(e.target.value)}
                   className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] placeholder:text-[#5a7050]/50 focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
@@ -312,24 +286,34 @@ export function LoginClient() {
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
+              <label
+                htmlFor="signup-email"
+                className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5"
+              >
                 Email Address
               </label>
               <input
+                id="signup-email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
+              <label
+                htmlFor="signup-password"
+                className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5"
+              >
                 Create Password
               </label>
               <input
+                id="signup-password"
                 type="password"
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
@@ -396,30 +380,47 @@ export function LoginClient() {
             </div>
             <h1 className="font-serif text-2xl text-[#1e3318] mb-2">Reset Password</h1>
             <p className="text-[#6a8060] text-sm">
-              Enter the email associated with your account and we&apos;ll send a recovery code.
+              Enter the email associated with your account and we&apos;ll send a password reset link.
             </p>
           </div>
 
           <form onSubmit={handleForgotPassword} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
+              <label
+                htmlFor="forgot-email"
+                className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5"
+              >
                 Email Address
               </label>
               <input
+                id="forgot-email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:ring-2 focus:ring-[#3a5c2f]/30"
               />
             </div>
 
+            {errorMessage && (
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {errorMessage}
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                {successMessage}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full rounded-full bg-[#d4933d] py-4 font-semibold text-white hover:bg-[#b97849] disabled:opacity-70 transition-colors shadow-md mt-2"
             >
-              {isSubmitting ? "Sending..." : "Send Recovery Code"}
+              {isSubmitting ? "Sending..." : "Send Reset Link"}
             </button>
           </form>
 
@@ -432,7 +433,7 @@ export function LoginClient() {
         </>
       )}
 
-      {authState === "enter_code" && (
+      {authState === "email_sent" && (
         <>
           <div className="mb-7 text-center">
             <div className="w-12 h-12 rounded-full bg-[#f0f7ed] flex items-center justify-center text-xl mx-auto mb-4">
@@ -440,7 +441,7 @@ export function LoginClient() {
             </div>
             <h1 className="font-serif text-2xl text-[#1e3318] mb-2">Check Your Email</h1>
             <p className="text-[#6a8060] text-sm">
-              We&apos;ve sent a 6-digit recovery code to{" "}
+              We&apos;ve sent a password reset link to{" "}
               <span className="font-semibold text-[#3a5c2f]">{email}</span>.
             </p>
           </div>
@@ -451,95 +452,26 @@ export function LoginClient() {
             </div>
           )}
 
-          <form onSubmit={handleVerifyCode} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
-                Recovery Code
-              </label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                placeholder="000000"
-                value={recoveryCode}
-                onChange={(e) => setRecoveryCode(e.target.value)}
-                className="w-full text-center tracking-[0.5em] font-mono text-xl rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:ring-2 focus:ring-[#3a5c2f]/30"
-              />
+          {errorMessage && (
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 text-center">
+              {errorMessage}
             </div>
+          )}
 
-            {errorMessage && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 text-center">
-                {errorMessage}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting || recoveryCode.length < 6}
-              className="w-full rounded-full bg-[#1e3318] py-4 font-semibold text-white hover:bg-[#3a5c2f] disabled:opacity-70 transition-colors shadow-md mt-2"
+          {developmentResetUrl ? (
+            <a
+              href={developmentResetUrl}
+              className="mt-2 block w-full rounded-full bg-[#1e3318] py-4 text-center font-semibold text-white hover:bg-[#3a5c2f] transition-colors shadow-md"
             >
-              {isSubmitting ? "Verifying..." : "Verify Code"}
-            </button>
-          </form>
+              Open Reset Page
+            </a>
+          ) : null}
 
           <button
             onClick={() => switchState("forgot_password")}
             className="mt-6 w-full text-center text-sm font-semibold text-[#5a7050] hover:text-[#1e3318]"
           >
-            Resend Code
-          </button>
-        </>
-      )}
-
-      {authState === "reset_password" && (
-        <>
-          <div className="mb-7 text-center">
-            <div className="w-12 h-12 rounded-full border-2 border-green-200 bg-green-50 flex items-center justify-center text-xl mx-auto mb-4">
-              ✔️
-            </div>
-            <h1 className="font-serif text-2xl text-[#1e3318] mb-2">Create New Password</h1>
-            <p className="text-[#6a8060] text-sm">
-              Your code was verified. Create a new strong password below.
-            </p>
-          </div>
-
-          <form onSubmit={handleResetPassword} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-[0.1em] text-[#5a7050] mb-1.5">
-                New Password
-              </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-[rgba(58,92,47,0.2)] px-4 py-3 text-[#1e3318] focus:outline-none focus:ring-2 focus:ring-[#3a5c2f]/30 transition-all"
-              />
-              <p className="text-[10px] text-[#5a7050] mt-1.5 italic">
-                Must be at least 8 characters with a number and symbol.
-              </p>
-            </div>
-
-            {errorMessage && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                {errorMessage}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full rounded-full bg-[#3a5c2f] py-4 font-semibold text-white hover:bg-[#1e3318] disabled:opacity-70 transition-colors shadow-md mt-2"
-            >
-              {isSubmitting ? "Updating..." : "Reset Password"}
-            </button>
-          </form>
-
-          <button
-            onClick={() => switchState("login")}
-            className="mt-6 w-full text-center text-sm font-semibold text-[#5a7050] hover:text-[#1e3318]"
-          >
-            ← Back to Sign In
+            Resend Link
           </button>
         </>
       )}

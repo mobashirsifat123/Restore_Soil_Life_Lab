@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import smtplib
 from dataclasses import dataclass
+from email.message import EmailMessage
 from typing import Final
+from urllib.parse import quote, urlsplit
 from uuid import UUID
 
 from fastapi import Request
@@ -27,9 +30,10 @@ from app.schemas.auth import (
     UpdateMemberProfileRequest,
 )
 from app.security.passwords import (
-    generate_recovery_code,
+    generate_password_reset_token,
     generate_session_token,
     hash_password,
+    hash_password_reset_token,
     hash_recovery_code,
     hash_session_token,
     verify_password,
@@ -201,44 +205,83 @@ class AuthService:
         payload: ForgotPasswordRequest,
         user_agent: str | None,
         ip_address: str | None,
+        frontend_origin: str | None = None,
+        frontend_referer: str | None = None,
     ) -> ForgotPasswordResponse:
+        # FRONTEND_URL (or a forwarded browser Origin) is required so reset links point at the web app.
+        frontend_url = self._resolve_frontend_url(
+            frontend_origin=frontend_origin,
+            frontend_referer=frontend_referer,
+        )
+        if frontend_url is None:
+            raise AppError(
+                status_code=503,
+                code="password_reset_not_configured",
+                message="Password reset is not configured. Set FRONTEND_URL for reset links.",
+            )
+
+        # SMTP_* env vars are optional in local development, but production needs them to deliver reset emails.
+        if not self.settings.password_reset_email_enabled and not (
+            self.settings.is_development or self.settings.api_debug
+        ):
+            raise AppError(
+                status_code=503,
+                code="password_reset_not_configured",
+                message="Password reset email delivery is not configured.",
+            )
+
         user = self.repository.get_user_by_email(payload.email)
         if user is None:
             return ForgotPasswordResponse(
-                message="If that account exists, a recovery code has been generated."
+                message="If that account exists, a password reset link has been sent."
             )
 
-        code = generate_recovery_code()
+        reset_token = generate_password_reset_token()
+        reset_url = f"{frontend_url.rstrip('/')}/reset-password?token={quote(reset_token)}"
         self.repository.create_password_reset_token(
             user_id=user.id,
-            code_hash=hash_recovery_code(code),
+            # Stored as a hash so leaked database rows cannot be used to reset passwords.
+            code_hash=hash_password_reset_token(reset_token),
             ttl_minutes=15,
             user_agent=user_agent,
             ip_address=ip_address,
         )
+
+        if self.settings.password_reset_email_enabled:
+            self._send_password_reset_email(email=user.email, reset_url=reset_url)
+
         self.repository.create_activity_log(
             organization_id=user.organization_id,
             activity_type="password_reset_requested",
             activity_label="Requested password reset",
             user_id=user.id,
             user_email=user.email,
-            details="Recovery code generated.",
+            details="Password reset link generated.",
         )
         return ForgotPasswordResponse(
-            message="If that account exists, a recovery code has been generated.",
-            development_code=code if self.settings.is_development or self.settings.api_debug else None,
+            message="If that account exists, a password reset link has been sent.",
+            development_reset_url=(
+                reset_url if (self.settings.is_development or self.settings.api_debug) else None
+            ),
         )
 
     def reset_password(self, *, payload: ResetPasswordRequest) -> None:
-        bundle = self.repository.get_valid_password_reset_token(
-            email=payload.email,
-            code_hash=hash_recovery_code(payload.code),
-        )
+        bundle = None
+        if payload.token:
+            bundle = self.repository.get_valid_password_reset_token_by_hash(
+                token_hash=hash_password_reset_token(payload.token),
+            )
+        elif payload.email and payload.code:
+            bundle = self.repository.get_valid_password_reset_token(
+                email=payload.email,
+                code_hash=hash_recovery_code(payload.code),
+            )
+
         if bundle is None:
             raise AppError(
                 status_code=400,
-                code="invalid_recovery_code",
-                message="The recovery code is invalid or expired.",
+                code="invalid_recovery_token",
+                message="The password reset link or recovery code is invalid or expired.",
             )
 
         token, user = bundle
@@ -555,3 +598,49 @@ class AuthService:
             return None
         stripped = value.strip()
         return stripped or None
+
+    def _resolve_frontend_url(
+        self,
+        *,
+        frontend_origin: str | None,
+        frontend_referer: str | None,
+    ) -> str | None:
+        if self.settings.frontend_url:
+            return self.settings.frontend_url.rstrip("/")
+        if frontend_origin:
+            return frontend_origin.rstrip("/")
+        if frontend_referer:
+            parts = urlsplit(frontend_referer)
+            if parts.scheme and parts.netloc:
+                return f"{parts.scheme}://{parts.netloc}"
+        if self.settings.allowed_origins:
+            return self.settings.allowed_origins[0].rstrip("/")
+        return None
+
+    def _send_password_reset_email(self, *, email: str, reset_url: str) -> None:
+        if not self.settings.password_reset_email_enabled or not self.settings.smtp_host:
+            return
+
+        message = EmailMessage()
+        message["Subject"] = "Reset your Bio Soil password"
+        message["From"] = self.settings.smtp_from_email
+        message["To"] = email
+        message.set_content(
+            "We received a request to reset your Bio Soil password.\n\n"
+            f"Use this link to choose a new password:\n{reset_url}\n\n"
+            "If you did not request this, you can safely ignore this email."
+        )
+
+        try:
+            with smtplib.SMTP(self.settings.smtp_host, self.settings.smtp_port, timeout=20) as server:
+                if self.settings.smtp_starttls:
+                    server.starttls()
+                if self.settings.smtp_username:
+                    server.login(self.settings.smtp_username, self.settings.smtp_password or "")
+                server.send_message(message)
+        except OSError as exc:
+            raise AppError(
+                status_code=502,
+                code="password_reset_delivery_failed",
+                message="Could not send the password reset email.",
+            ) from exc

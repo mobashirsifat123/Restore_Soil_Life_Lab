@@ -64,8 +64,8 @@ export default async function LoginPage() {
           <>
             <div className="mt-8 flex justify-center">
               <div className="rounded-full border border-[#d3ceb8] bg-[rgba(245,239,223,0.5)] px-4 py-2 text-[11px] font-medium text-[#7c7a67]">
-                FastAPI now handles live sign-in and registration. Email recovery is still mocked in
-                the UI pending mail delivery setup.
+                FastAPI now handles live sign-in, registration, and password recovery. Local
+                development uses a reset link directly until SMTP delivery is configured.
               </div>
             </div>
 
