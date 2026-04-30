@@ -1,133 +1,374 @@
 # Bio Soil Platform
 
-Premium scientific SaaS monorepo for a high-trust bio soil company.
+Bio Soil is a science-driven software platform for soil-health analysis, simulation workflows, and content-managed scientific storytelling. The repository is structured as a monorepo so the web application, API, worker runtime, simulation engine, and shared packages can evolve together with clear boundaries.
 
-## Repository Layout
+## What The Project Includes
+
+- a public marketing website built in Next.js
+- an authenticated product workspace for projects, samples, scenarios, runs, and admin tools
+- a FastAPI backend for auth, business rules, persistence, and API contracts
+- a worker service for asynchronous execution
+- a pure Python simulation engine isolated from HTTP and storage concerns
+- shared TypeScript packages for UI primitives, design tokens, and the generated API client
+
+## Core Product Capabilities
+
+- member authentication with session-based login, registration, password reset, and profile management
+- project-scoped workflows for soil samples, scenarios, and simulation runs
+- deterministic simulation execution with versioned inputs and artifacts
+- admin-managed content for marketing pages, blog content, calculator content, and media assets
+- AI-assisted chat and analysis surfaces integrated into the application
+
+## Repository Structure
+
+```text
+bio_lab/
+├── apps/
+│   └── web/                  # Next.js web app for marketing + platform surfaces
+├── services/
+│   ├── api/                  # FastAPI application, migrations, schemas, repositories
+│   ├── worker/               # Async worker runtime for jobs and reports
+│   └── simulation-engine/    # Pure scientific compute package
+├── packages/
+│   ├── api-client/           # Generated TypeScript client for the API
+│   ├── design-tokens/        # Shared theme tokens
+│   └── ui/                   # Shared React UI primitives
+├── infra/
+│   └── docker/               # Local PostgreSQL + Redis stack
+├── docs/                     # Architecture, domain, roadmap, and quality docs
+└── scripts/                  # Bootstrap and local development helper scripts
+```
+
+## Architecture Overview
+
+The system is intentionally split by runtime responsibility.
 
 - `apps/web`
-  - Next.js App Router application for marketing and product surfaces
+  Public-facing pages and authenticated product UI. The app uses the Next.js App Router and contains both marketing routes and logged-in platform routes in one codebase.
 - `services/api`
-  - FastAPI API, validation, business rules, and persistence
+  The source of truth for auth, authorization, validation, organization scoping, CRUD operations, run orchestration, and API documentation.
 - `services/worker`
-  - background execution for simulations and reports
+  The background execution layer for queued jobs, long-running tasks, and report generation.
 - `services/simulation-engine`
-  - pure Python scientific engine, isolated from HTTP concerns
-- `packages/api-client`
-  - generated frontend API client surface
-- `packages/ui`
-  - shared React UI primitives
-- `packages/design-tokens`
-  - shared design tokens and theme values
-- `infra/docker`
-  - local PostgreSQL and Redis stack
+  The scientific model runtime. This package stays independent from FastAPI, SQLAlchemy, Redis, and browser concerns so it remains deterministic and easy to test.
+- `packages/*`
+  Shared frontend contracts and primitives that reduce duplication across the web app.
 
-Architecture details live in `docs/architecture.md`.
+High-level request path:
 
-## Tooling Strategy
+```text
+Browser -> Next.js web app -> FastAPI API -> PostgreSQL / Redis / storage
+                                         -> Worker -> Simulation engine
+```
 
-- `pnpm` workspaces manage JavaScript and TypeScript packages
-- `turbo` coordinates JS builds and typechecks
-- `uv` manages Python environments per service
-- each Python service owns its own `pyproject.toml`
-- there is intentionally no root Python package
+## Main Application Areas
 
-This keeps:
+### Marketing Surface
 
-- the FastAPI API isolated from worker runtime concerns
-- the worker isolated from frontend dependencies
-- the simulation engine isolated from FastAPI and HTTP packages
+The public site includes brand and science-oriented pages such as:
 
-## Environment Files
+- home
+- about
+- science
+- case studies
+- blog
+- contact
 
-Create local env files from the examples:
+These routes live in the web app and are optimized for editorial control and presentation quality.
 
-- `.env.example -> .env`
-- `apps/web/.env.example -> apps/web/.env.local`
-- `services/api/.env.example -> services/api/.env`
-- `services/worker/.env.example -> services/worker/.env`
+### Product Surface
 
-`pnpm bootstrap` creates missing local env files automatically.
+The authenticated application includes:
 
-## Quick Start
+- dashboard
+- projects
+- soil sample creation and management
+- scenario setup
+- simulation run submission and run detail views
+- settings
+- admin pages for users, blog content, about-page content, calculator content, media, and chat tools
 
-1. Install:
-   - Node.js 22+
-   - `pnpm`
-   - Python 3.12+
-   - `uv`
-   - Docker
-2. Bootstrap the repo:
-   - `pnpm bootstrap`
-3. Start local infrastructure:
-   - `pnpm dev:stack`
-4. Apply database migrations:
-   - `pnpm db:migrate`
-5. Start the application processes:
-   - `pnpm dev`
+### API Domains
 
-For the current local setup, `pnpm dev` starts the web app and API only. This is the smooth default when using Supabase plus the API's inline run fallback. If you also have Redis running and want the queue-backed worker path, use `pnpm dev:full`.
+The backend is organized around these primary domains:
+
+- auth
+- projects
+- soil samples
+- scenarios
+- runs
+- admin
+- CMS
+- chat
+- system
+
+## Technology Stack
+
+### Frontend
+
+- Next.js 15
+- React
+- TypeScript
+- Tailwind CSS
+
+### Backend
+
+- FastAPI
+- Pydantic
+- SQLAlchemy
+- Alembic
+
+### Data And Jobs
+
+- PostgreSQL
+- Redis
+
+### Scientific Compute
+
+- Python package in `services/simulation-engine`
+
+### Monorepo Tooling
+
+- `pnpm` workspaces
+- `turbo`
+- per-service Python environments managed through the repository scripts
+
+## Local Development
+
+### Prerequisites
+
+- Node.js 22+
+- `pnpm` 9+
+- Python 3.12+
+- PostgreSQL
+- Redis if you want the queue-backed worker path
+
+Docker is optional if you already have local PostgreSQL and Redis running.
+
+### Environment Files
+
+Create the local environment files if they do not already exist:
+
+- `.env`
+- `apps/web/.env.local`
+- `services/api/.env`
+- `services/worker/.env`
+
+The repository includes matching example files for each environment.
+
+### Bootstrap
+
+Install dependencies and initialize local environments:
+
+```bash
+pnpm bootstrap
+```
+
+### Database Migration
+
+Apply API migrations:
+
+```bash
+pnpm db:migrate
+```
+
+### Start The App
+
+Start the default local stack:
+
+```bash
+pnpm dev
+```
+
+This runs:
+
+- web app on `http://localhost:3000`
+- API on `http://localhost:8000`
+
+To include the worker:
+
+```bash
+pnpm dev:full
+```
+
+If you want the repository-managed Redis/PostgreSQL containers:
+
+```bash
+pnpm dev:stack
+```
+
+Stop them with:
+
+```bash
+pnpm dev:stack:down
+```
+
+## Important Local Runtime Notes
+
+- `pnpm dev` starts only the web app and API.
+- `pnpm dev:full` adds the worker.
+- If `RUN_INLINE_FALLBACK_ENABLED=true`, simulation runs can complete without Redis or the worker.
+- If you want the real queue-backed job path, run Redis and start the worker.
 
 ## Root Commands
 
-- `pnpm bootstrap`
-  - installs JS dependencies, syncs Python service environments, and creates local env files
-- `pnpm dev:stack`
-  - starts PostgreSQL and Redis
-- `pnpm dev`
-  - runs web and API together for the default local workflow
-- `pnpm dev:full`
-  - runs web, API, and worker together when Redis is available
-- `pnpm dev:web`
-  - starts the Next.js app after clearing the local `.next` cache to avoid stale dev artifacts
-- `pnpm build`
-  - runs Turbo builds for the JS workspace
-- `pnpm typecheck`
-  - runs Turbo typechecks for the JS workspace
+```bash
+pnpm bootstrap
+pnpm dev
+pnpm dev:full
+pnpm dev:web
+pnpm dev:api
+pnpm dev:worker
+pnpm db:migrate
+pnpm build
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm preflight:prod
+pnpm gen:api-client
+```
+
+## Service-Level Notes
+
+### `apps/web`
+
+Responsibilities:
+
+- marketing pages
+- authenticated product UX
+- admin UI
+- route-level integration with the API
+
+Relevant structure:
+
+- `src/app/(marketing)` for public pages
+- `src/app/(platform)` for authenticated product pages
+- `src/app/admin` for admin-facing tools
+- `src/app/api/bio/[...path]` as the local API proxy layer
+
+### `services/api`
+
+Responsibilities:
+
+- session auth and password reset
+- authorization and role handling
+- business validation and organization scoping
+- database access
+- job submission and status APIs
+- admin and CMS endpoints
+
+Relevant structure:
+
+- `app/api/v1/routes/`
+- `app/services/`
+- `app/repositories/`
+- `app/schemas/`
+- `alembic/versions/`
+
+### `services/worker`
+
+Responsibilities:
+
+- consume queued jobs
+- execute asynchronous run handlers
+- generate reports and artifacts
+- publish status updates
+
+### `services/simulation-engine`
+
+Responsibilities:
+
+- pure scientific calculations
+- deterministic execution for fixed inputs
+- CLI and in-process invocation paths
+
+Primary entry points:
+
+- `python -m soil_engine.cli run --input input.json --output output.json`
+- library-level execution through the package API
+
+## Authentication And Roles
+
+The project includes:
+
+- login
+- registration
+- session cookies
+- password reset
+- member profile management
+- organization membership
+- role-based admin access
+
+Local behavior can differ from production in one important way: password reset may expose a development recovery code instead of delivering a real email, depending on configuration.
+
+## Data Model Summary
+
+Core entities include:
+
+- organizations
+- users
+- organization memberships
+- auth sessions
+- projects
+- soil samples
+- soil sample versions
+- simulation scenarios
+- simulation runs
+- run artifacts
+- CMS pages and sections
+- blog posts
+- media assets
+- chat-related tables
+
+## Testing And Quality
+
+The repository includes coverage across JavaScript and Python services.
+
 - `pnpm lint`
-  - runs ESLint for JS/TS and Ruff for Python
-- `pnpm format`
-  - formats supported files with Prettier
+  Runs ESLint and Ruff.
+- `pnpm typecheck`
+  Runs TypeScript checks across the workspace.
 - `pnpm test`
-  - runs JS tests if present and Python test suites
-- `pnpm gen:api-client`
-  - regenerates the TypeScript API client
+  Runs frontend package tests if present and Python test suites for API, worker, and simulation engine.
 - `pnpm preflight:prod`
-  - runs full production preflight (format, lint, typecheck, tests, build, critical E2E link/chat checks)
+  Runs the production preflight sequence before release.
 
-## Production Readiness
+## Deployment And Production Notes
 
-- Keep production runtime flags safe:
-  - `API_ENV=production`
-  - `API_DEBUG=false`
-  - `DEBUG_AUTH_ENABLED=false`
-  - `AUTH_SESSION_SECURE_COOKIE=true`
-  - `ALLOWED_ORIGINS` must not include `*`
-  - `WORKER_OPTIONAL_WHEN_REDIS_UNAVAILABLE=false` when `WORKER_ENV=production`
-- Set `API_BASE_URL` for the deployed web runtime to the public API origin.
-- For live chatbot LLM replies, set `DEEPSEEK_API_KEY` in `services/api/.env` and optionally tune `DEEPSEEK_MODEL` / `DEEPSEEK_BASE_URL`.
-- Gemini envs remain optional for backward compatibility, but DeepSeek is now the default chat provider.
-- Run `pnpm preflight:prod` before every release.
+Production safety assumptions include:
 
-## Local Ports
+- `API_ENV=production`
+- `API_DEBUG=false`
+- `DEBUG_AUTH_ENABLED=false`
+- `AUTH_SESSION_SECURE_COOKIE=true`
+- `ALLOWED_ORIGINS` must not include `*`
 
-- Web: `http://localhost:3000`
-- API: `http://localhost:8000`
-- PostgreSQL: `localhost:5432`
-- Redis: `localhost:6379`
+Additional production requirements:
 
-## Local Dev Notes
+- set `API_BASE_URL` for the deployed web runtime
+- configure storage credentials if using media uploads
+- configure LLM provider keys for live AI/chat behavior
+- run `pnpm preflight:prod` before release
 
-- The default local path uses Supabase for PostgreSQL.
-- If `RUN_INLINE_FALLBACK_ENABLED=true`, simulation runs can complete without Redis or the worker.
-- If you want the real queue-backed worker flow, start Redis first and then use `pnpm dev:full`.
+## Documentation
 
-## First Thin Slice
+For deeper detail, start with:
 
-The first milestone is:
+- [docs/architecture.md](/Users/mobashirsifat/Desktop/bio_lab%20/docs/architecture.md)
+- [docs/frontend/frontend-architecture.md](/Users/mobashirsifat/Desktop/bio_lab%20/docs/frontend/frontend-architecture.md)
+- [docs/api/fastapi-backend-mvp.md](/Users/mobashirsifat/Desktop/bio_lab%20/docs/api/fastapi-backend-mvp.md)
+- [docs/domain/simulation-engine-architecture.md](/Users/mobashirsifat/Desktop/bio_lab%20/docs/domain/simulation-engine-architecture.md)
+- [docs/implementation-roadmap.md](/Users/mobashirsifat/Desktop/bio_lab%20/docs/implementation-roadmap.md)
 
-1. create a project
-2. add a soil sample
-3. create a simulation scenario
-4. submit a simulation run
-5. let the worker process a placeholder engine run
-6. open the results page and view metadata plus output
+## Current Development Status
+
+The repository already contains working scaffolding and implemented flows across:
+
+- auth
+- project/sample/scenario/run APIs
+- admin and CMS surfaces
+- worker runtime
+- simulation engine package
+- generated client and shared UI packages
+
+The platform is structured to support a full workflow from account access through simulation result retrieval, with room for further hardening, richer content management, and more advanced scientific modeling.
