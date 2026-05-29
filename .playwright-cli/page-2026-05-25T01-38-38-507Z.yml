@@ -1,0 +1,398 @@
+- generic [ref=e2]:
+  - link "Skip to content" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e4]:
+    - text: 🌱
+    - generic [ref=e5]:
+      - strong [ref=e6]: "New:"
+      - text: SilkSoil — our member-exclusive soil analysis system — is now live.
+    - link "Learn more →" [ref=e7] [cursor=pointer]:
+      - /url: /silksoil
+    - button "Dismiss announcement" [ref=e8] [cursor=pointer]: ×
+  - banner [ref=e9]:
+    - generic [ref=e10]:
+      - link "Bio Soil Soil Food Web Institute" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e12]: Bio Soil
+        - generic [ref=e13]: Soil Food Web Institute
+      - button "Open menu" [ref=e14] [cursor=pointer]:
+        - img [ref=e15]
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e19]: Bio Soil
+      - button "Close menu" [ref=e20] [cursor=pointer]:
+        - img [ref=e21]
+    - navigation [ref=e23]:
+      - link "Home" [ref=e24] [cursor=pointer]:
+        - /url: /
+      - link "About" [ref=e25] [cursor=pointer]:
+        - /url: /about
+      - link "🌱 SilkSoil" [ref=e26] [cursor=pointer]:
+        - /url: /silksoil
+      - link "Science" [ref=e27] [cursor=pointer]:
+        - /url: /science
+      - link "Blog" [ref=e28] [cursor=pointer]:
+        - /url: /blog
+      - link "Contact Us" [ref=e29] [cursor=pointer]:
+        - /url: /contact
+      - link "Sign In" [ref=e30] [cursor=pointer]:
+        - /url: /login
+    - link "Sign In to Access SilkSoil" [ref=e32] [cursor=pointer]:
+      - /url: /login
+  - main [ref=e33]:
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]: Biology
+        - generic [ref=e39]: Moisture
+        - generic [ref=e40]: Carbon
+        - generic [ref=e41]: Field Signals
+      - paragraph [ref=e42]: Soil Food Web Science · Education · Precision Tools
+      - heading "Healthy soil starts with understanding the living community beneath your feet." [level=1] [ref=e43]
+      - paragraph [ref=e44]: Bio Soil brings together soil biology education, a free soil health calculator, and a scientific member platform so farmers, consultants, and ecologists can restore the soil food web and see measurable results.
+      - generic [ref=e45]:
+        - link "Open BioSilk Chat" [ref=e46] [cursor=pointer]:
+          - /url: /chat
+        - link "Explore the science" [ref=e47] [cursor=pointer]:
+          - /url: /science
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: 150%
+          - paragraph [ref=e51]: Reported yield increase
+          - paragraph [ref=e52]: In the first growing season
+        - generic [ref=e53]:
+          - paragraph [ref=e54]: 100%
+          - paragraph [ref=e55]: Reduction in pest damage
+          - paragraph [ref=e56]: Using natural food web protection
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: 60%
+          - paragraph [ref=e59]: Cut in fertilizer costs
+          - paragraph [ref=e60]: After soil biology restored
+        - generic [ref=e61]:
+          - paragraph [ref=e62]: "6"
+          - paragraph [ref=e63]: Continents with proven results
+          - paragraph [ref=e64]: Farmers transformed worldwide
+    - generic [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - paragraph [ref=e69]: Field Articles
+          - heading "Soil problems, explained through living systems." [level=2] [ref=e70]
+          - paragraph [ref=e71]: Replace these with your migrated WeChat and Rednote articles. Each tile is built for strong cover imagery, a short excerpt, and a more editorial browsing experience.
+        - generic [ref=e72]:
+          - generic [ref=e73]: Interactive Feed
+          - paragraph [ref=e74]: Hover over an article to reveal depth, glow, and motion around the cursor.
+      - link "Diminishing Soil Fertility The Soil-ution Diminishing Soil Fertility With a restored soil food web in place, plants can control nutrient cycling in their root zones, accessing minerals stored in organic matter and parent material. Plants get a constant flow of nutrients they control. Read article" [ref=e75] [cursor=pointer]:
+        - /url: /science/nutrient-cycling
+        - generic [ref=e77]:
+          - img "Diminishing Soil Fertility" [ref=e78]
+          - generic [ref=e80]:
+            - paragraph [ref=e81]: The Soil-ution
+            - heading "Diminishing Soil Fertility" [level=3] [ref=e82]
+            - paragraph [ref=e83]: With a restored soil food web in place, plants can control nutrient cycling in their root zones, accessing minerals stored in organic matter and parent material. Plants get a constant flow of nutrients they control.
+            - generic [ref=e84]: Read article
+      - generic [ref=e85]:
+        - link "Diseases, Pests & Weeds 02 Problem Solved Diseases, Pests & Weeds The soil food web provides natural protection against pests and diseases and also inhibits the growth of weeds — without chemical intervention. Read more →" [ref=e86] [cursor=pointer]:
+          - /url: /science
+          - generic [ref=e87]:
+            - img "Diseases, Pests & Weeds" [ref=e88]
+            - generic [ref=e90]: "02"
+            - generic [ref=e91]:
+              - paragraph [ref=e92]: Problem Solved
+              - heading "Diseases, Pests & Weeds" [level=3] [ref=e93]
+              - paragraph [ref=e94]: The soil food web provides natural protection against pests and diseases and also inhibits the growth of weeds — without chemical intervention.
+              - generic [ref=e95]: Read more →
+        - link "Declining Farm Profits 03 How We Help Declining Farm Profits When the soil food web is restored, farmers no longer need chemicals. Reduced irrigation and plowing requirements also result in significant cost savings. Read more →" [ref=e96] [cursor=pointer]:
+          - /url: /science
+          - generic [ref=e97]:
+            - img "Declining Farm Profits" [ref=e98]
+            - generic [ref=e100]: "03"
+            - generic [ref=e101]:
+              - paragraph [ref=e102]: How We Help
+              - heading "Declining Farm Profits" [level=3] [ref=e103]
+              - paragraph [ref=e104]: When the soil food web is restored, farmers no longer need chemicals. Reduced irrigation and plowing requirements also result in significant cost savings.
+              - generic [ref=e105]: Read more →
+        - link "Climate Change 04 Carbon Sequestration Climate Change Plants absorb carbon and invest ~40% into the soil to feed microorganisms. By regenerating the world's soils we could halt and reverse climate change within 15–20 years. Read more →" [ref=e106] [cursor=pointer]:
+          - /url: /science/carbon-sequestration
+          - generic [ref=e107]:
+            - img "Climate Change" [ref=e108]
+            - generic [ref=e110]: "04"
+            - generic [ref=e111]:
+              - paragraph [ref=e112]: Carbon Sequestration
+              - heading "Climate Change" [level=3] [ref=e113]
+              - paragraph [ref=e114]: Plants absorb carbon and invest ~40% into the soil to feed microorganisms. By regenerating the world's soils we could halt and reverse climate change within 15–20 years.
+              - generic [ref=e115]: Read more →
+        - link "Bird & Insect Decline 05 Ecosystem Restoration Bird & Insect Decline With the soil food web in place and natural farming practices, pesticides aren't required. The soil food web naturally protects plants, and the entire ecosystem flourishes. Read more →" [ref=e116] [cursor=pointer]:
+          - /url: /science
+          - generic [ref=e117]:
+            - img "Bird & Insect Decline" [ref=e118]
+            - generic [ref=e120]: "05"
+            - generic [ref=e121]:
+              - paragraph [ref=e122]: Ecosystem Restoration
+              - heading "Bird & Insect Decline" [level=3] [ref=e123]
+              - paragraph [ref=e124]: With the soil food web in place and natural farming practices, pesticides aren't required. The soil food web naturally protects plants, and the entire ecosystem flourishes.
+              - generic [ref=e125]: Read more →
+        - link "Soil Erosion 06 Structure Formation Soil Erosion Soil food web microorganisms build soil structure that prevents erosion by wind and rain. Compaction layers break up, allowing water and plant roots to penetrate deeper. Read more →" [ref=e126] [cursor=pointer]:
+          - /url: /science
+          - generic [ref=e127]:
+            - img "Soil Erosion" [ref=e128]
+            - generic [ref=e130]: "06"
+            - generic [ref=e131]:
+              - paragraph [ref=e132]: Structure Formation
+              - heading "Soil Erosion" [level=3] [ref=e133]
+              - paragraph [ref=e134]: Soil food web microorganisms build soil structure that prevents erosion by wind and rain. Compaction layers break up, allowing water and plant roots to penetrate deeper.
+              - generic [ref=e135]: Read more →
+    - generic [ref=e137]:
+      - generic [ref=e138]:
+        - img "Soil microorganisms under microscope — the living community in healthy soil" [ref=e139]
+        - link [ref=e141] [cursor=pointer]:
+          - /url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+          - img [ref=e142]
+        - generic [ref=e144]: Soil food web under fluorescence microscopy
+      - generic [ref=e145]:
+        - paragraph [ref=e146]: Our Approach
+        - heading "The Bio Soil Approach to Soil Regeneration" [level=2] [ref=e147]
+        - paragraph [ref=e148]: The complete soil food web can be found in virgin soils around the world. Once disrupted by chemical inputs, tillage, and monoculture, it must be deliberately and methodically restored.
+        - paragraph [ref=e149]: Using BioComplete™ soil amendments aligned with the soil food web science, most soils can be regenerated in the first growing season — with measurable, quantifiable results tracked through our analysis platform.
+        - generic [ref=e150]:
+          - link "How It Works" [ref=e151] [cursor=pointer]:
+            - /url: /science
+          - link "Test Your Soil" [ref=e152] [cursor=pointer]:
+            - /url: /silksoil
+    - generic [ref=e154]:
+      - generic [ref=e155]:
+        - img "Scientist holding healthy soil showing living root and fungi networks" [ref=e156]
+        - generic [ref=e158]:
+          - paragraph [ref=e159]: In the field
+          - heading "Living soil you can see and feel" [level=3] [ref=e160]
+          - paragraph [ref=e161]: Healthy soil teems with organisms visible to the naked eye — earthworms, fungi strands, and structured aggregates.
+      - generic [ref=e162]:
+        - img "Healthy regenerative farm field at golden hour showing thriving crops" [ref=e163]
+        - generic [ref=e165]:
+          - paragraph [ref=e166]: Results on six continents
+          - heading "Measurable yield improvements" [level=3] [ref=e167]
+          - paragraph [ref=e168]: Farmers report yield increases of up to 150% in the first season after restoring their soil food web.
+    - generic [ref=e174]:
+      - generic [ref=e175]:
+        - generic [ref=e176]: Live scoring
+        - generic [ref=e177]: Microbial ratios
+        - generic [ref=e178]: Decision-ready
+      - paragraph [ref=e179]: New Feature
+      - heading "SilkSoil" [level=2] [ref=e180]
+      - paragraph [ref=e181]: Enter your soil measurements — pH, organic matter, temperature, moisture, microbial indicators — and receive a comprehensive Soil Health Score with actionable recommendations.
+      - list [ref=e182]:
+        - listitem [ref=e183]:
+          - generic [ref=e184]: ✓
+          - text: Fungal-to-Bacterial ratio analysis
+        - listitem [ref=e185]:
+          - generic [ref=e186]: ✓
+          - text: Nutrient availability scoring
+        - listitem [ref=e187]:
+          - generic [ref=e188]: ✓
+          - text: Biological activity index
+        - listitem [ref=e189]:
+          - generic [ref=e190]: ✓
+          - text: Predictive yield improvement estimate
+        - listitem [ref=e191]:
+          - generic [ref=e192]: ✓
+          - text: Personalised restoration roadmap
+      - link "Sign In to Access SilkSoil" [ref=e193] [cursor=pointer]:
+        - /url: /login
+    - generic [ref=e195]:
+      - generic [ref=e196]:
+        - generic [ref=e197]: Proof Layer
+        - paragraph [ref=e198]: Regeneration metrics observed across field programs
+      - generic [ref=e199]:
+        - generic [ref=e200]:
+          - paragraph [ref=e201]: Metric 01
+          - paragraph [ref=e202]: 150%
+          - paragraph [ref=e203]: Reported yield increase
+          - paragraph [ref=e204]: In the first growing season
+        - generic [ref=e205]:
+          - paragraph [ref=e206]: Metric 02
+          - paragraph [ref=e207]: 100%
+          - paragraph [ref=e208]: Reduction in pest damage
+          - paragraph [ref=e209]: Using natural food web protection
+        - generic [ref=e210]:
+          - paragraph [ref=e211]: Metric 03
+          - paragraph [ref=e212]: 60%
+          - paragraph [ref=e213]: Cut in fertilizer costs
+          - paragraph [ref=e214]: After soil biology restored
+        - generic [ref=e215]:
+          - paragraph [ref=e216]: Metric 04
+          - paragraph [ref=e217]: "6"
+          - paragraph [ref=e218]: Continents with proven results
+          - paragraph [ref=e219]: Farmers transformed worldwide
+    - generic [ref=e221]:
+      - generic [ref=e222]:
+        - generic [ref=e223]:
+          - paragraph [ref=e224]: What our community says
+          - heading "Proven on Six Continents" [level=2] [ref=e225]
+        - generic [ref=e227]:
+          - generic [ref=e228]: Field voices
+          - paragraph [ref=e229]: The strongest signal is repeatable feedback from growers, consultants, and scientists applying the approach in very different climates.
+      - generic [ref=e230]:
+        - generic [ref=e232]:
+          - generic [ref=e233]:
+            - img [ref=e234]
+            - generic [ref=e236]: "01"
+          - paragraph [ref=e237]: “Our farm was in serious trouble, but after implementing the soil food web approach we increased our yield by 150% in a single season. We also cut fertilizer costs by at least 60%. We continue to monitor and move our soils to a much better place.”
+          - generic [ref=e238]:
+            - paragraph [ref=e239]: Hassan A.
+            - paragraph [ref=e240]: Grain Farmer, Morocco
+        - generic [ref=e242]:
+          - generic [ref=e243]:
+            - img [ref=e244]
+            - generic [ref=e246]: "02"
+          - paragraph [ref=e247]: “I'm learning so much I never knew before — even after receiving a degree in Horticulture. Bio Soil explains everything so precisely. I'm excited to start this journey with the soil food web approach!”
+          - generic [ref=e248]:
+            - paragraph [ref=e249]: Meredith L.
+            - paragraph [ref=e250]: Horticulturist, New Zealand
+        - generic [ref=e252]:
+          - generic [ref=e253]:
+            - img [ref=e254]
+            - generic [ref=e256]: "03"
+          - paragraph [ref=e257]: “It was one of the greatest courses I have ever taken. The potential of being able to help farmers transition to biology-first agriculture is incredibly exciting.”
+          - generic [ref=e258]:
+            - paragraph [ref=e259]: Thomas B.
+            - paragraph [ref=e260]: Agricultural Consultant, Germany
+        - generic [ref=e262]:
+          - generic [ref=e263]:
+            - img [ref=e264]
+            - generic [ref=e266]: "04"
+          - paragraph [ref=e267]: “Great information. It has given me a new outlook for the future of farming. The soil health calculator alone saved me weeks of guesswork.”
+          - generic [ref=e268]:
+            - paragraph [ref=e269]: Sara M.
+            - paragraph [ref=e270]: Regenerative Farmer, Oregon
+        - generic [ref=e272]:
+          - generic [ref=e273]:
+            - img [ref=e274]
+            - generic [ref=e276]: "05"
+          - paragraph [ref=e277]: “I've taken many professional certifications throughout my career and I do appreciate this format. Obviously the content is invaluable.”
+          - generic [ref=e278]:
+            - paragraph [ref=e279]: Akira T.
+            - paragraph [ref=e280]: Soil Scientist, Japan
+        - generic [ref=e282]:
+          - generic [ref=e283]:
+            - img [ref=e284]
+            - generic [ref=e286]: "06"
+          - paragraph [ref=e287]: “I have greatly appreciated this approach. It has filled in gaps in my knowledge on how to heal depleted soil. Bio Soil's tools make it practical.”
+          - generic [ref=e288]:
+            - paragraph [ref=e289]: Camille R.
+            - paragraph [ref=e290]: Permaculture Designer, France
+    - generic [ref=e292]:
+      - generic [ref=e293]:
+        - generic [ref=e294]:
+          - paragraph [ref=e295]: Latest from the field
+          - heading "News & Updates" [level=2] [ref=e296]
+        - generic [ref=e297]:
+          - generic [ref=e298]:
+            - generic [ref=e299]: Research feed
+            - link "View all articles →" [ref=e300] [cursor=pointer]:
+              - /url: /blog
+          - paragraph [ref=e301]: A live mix of scientific explainers, field case studies, and product updates for growers tracking biological performance over time.
+      - generic [ref=e302]:
+        - link "Science 6 min read How Mycorrhizal Fungi Networks Drive Nutrient Cycling Underground fungal highways transport nutrients between plants and microorganisms in ways that still astonish soil scientists today. April 2026 Read more →" [ref=e303] [cursor=pointer]:
+          - /url: /blog/mycorrhizal-fungi-nutrient-cycling
+          - generic [ref=e304]:
+            - generic [ref=e305]:
+              - generic [ref=e306]: Science
+              - generic [ref=e307]: 6 min read
+            - heading "How Mycorrhizal Fungi Networks Drive Nutrient Cycling" [level=3] [ref=e308]
+            - paragraph [ref=e309]: Underground fungal highways transport nutrients between plants and microorganisms in ways that still astonish soil scientists today.
+            - generic [ref=e310]:
+              - generic [ref=e311]: April 2026
+              - generic [ref=e312]: Read more →
+        - link "Case Studies 8 min read Pakistani Farm Soil Restored in One Season with Bio Approach Wild Soils UK and TrashIt demonstrate how the soil food web approach transformed degraded farmland in Pakistan, achieving a 120% yield increase. March 2026 Read more →" [ref=e313] [cursor=pointer]:
+          - /url: /blog/pakistani-farm-soil-restored
+          - generic [ref=e314]:
+            - generic [ref=e315]:
+              - generic [ref=e316]: Case Studies
+              - generic [ref=e317]: 8 min read
+            - heading "Pakistani Farm Soil Restored in One Season with Bio Approach" [level=3] [ref=e318]
+            - paragraph [ref=e319]: Wild Soils UK and TrashIt demonstrate how the soil food web approach transformed degraded farmland in Pakistan, achieving a 120% yield increase.
+            - generic [ref=e320]:
+              - generic [ref=e321]: March 2026
+              - generic [ref=e322]: Read more →
+        - 'link "Updates 4 min read SilkSoil: New Microbiome Scoring Module Released Our latest calculator update adds fungal-to-bacterial ratio scoring and a predictive yield improvement estimate based on 5 years of field data. March 2026 Read more →" [ref=e323] [cursor=pointer]':
+          - /url: /blog/silksoil-microbiome-scoring
+          - generic [ref=e324]:
+            - generic [ref=e325]:
+              - generic [ref=e326]: Updates
+              - generic [ref=e327]: 4 min read
+            - 'heading "SilkSoil: New Microbiome Scoring Module Released" [level=3] [ref=e328]'
+            - paragraph [ref=e329]: Our latest calculator update adds fungal-to-bacterial ratio scoring and a predictive yield improvement estimate based on 5 years of field data.
+            - generic [ref=e330]:
+              - generic [ref=e331]: March 2026
+              - generic [ref=e332]: Read more →
+  - contentinfo [ref=e333]:
+    - generic [ref=e334]:
+      - paragraph [ref=e335]: Join the movement
+      - heading "Start Regenerating Soil Today" [level=2] [ref=e336]
+      - paragraph [ref=e337]: Sign in to access SilkSoil — our member-exclusive soil analysis system — and follow the science-backed path to soil restoration.
+      - generic [ref=e338]:
+        - link "Sign In to Access SilkSoil" [ref=e339] [cursor=pointer]:
+          - /url: /login
+        - link "Learn the Science" [ref=e340] [cursor=pointer]:
+          - /url: /about
+    - generic [ref=e341]:
+      - generic [ref=e342]:
+        - paragraph [ref=e343]: Bio Soil
+        - paragraph [ref=e344]: Soil Food Web Institute
+        - paragraph [ref=e345]: Empowering farmers and consultants with science-backed soil biology tools, education, and a connected member platform.
+        - generic [ref=e346]:
+          - link "Twitter" [ref=e347] [cursor=pointer]:
+            - /url: https://x.com
+            - text: T
+          - link "YouTube" [ref=e348] [cursor=pointer]:
+            - /url: https://www.youtube.com
+            - text: "Y"
+          - link "LinkedIn" [ref=e349] [cursor=pointer]:
+            - /url: https://www.linkedin.com
+            - text: L
+          - link "Instagram" [ref=e350] [cursor=pointer]:
+            - /url: https://www.instagram.com
+            - text: I
+      - generic [ref=e351]:
+        - paragraph [ref=e352]: Tools
+        - list [ref=e353]:
+          - listitem [ref=e354]:
+            - link "SilkSoil Analysis" [ref=e355] [cursor=pointer]:
+              - /url: /silksoil
+          - listitem [ref=e356]:
+            - link "Sign In" [ref=e357] [cursor=pointer]:
+              - /url: /login
+      - generic [ref=e358]:
+        - paragraph [ref=e359]: Learn
+        - list [ref=e360]:
+          - listitem [ref=e361]:
+            - link "How It Works" [ref=e362] [cursor=pointer]:
+              - /url: /science
+          - listitem [ref=e363]:
+            - link "About Us" [ref=e364] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e365]:
+            - link "Blog & Updates" [ref=e366] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e367]:
+            - link "Case Studies" [ref=e368] [cursor=pointer]:
+              - /url: /case-studies
+          - listitem [ref=e369]:
+            - link "Contact Us" [ref=e370] [cursor=pointer]:
+              - /url: /contact
+      - generic [ref=e371]:
+        - paragraph [ref=e372]: Company
+        - list [ref=e373]:
+          - listitem [ref=e374]:
+            - link "Privacy Policy" [ref=e375] [cursor=pointer]:
+              - /url: /privacy
+          - listitem [ref=e376]:
+            - link "Terms & Conditions" [ref=e377] [cursor=pointer]:
+              - /url: /terms
+          - listitem [ref=e378]:
+            - link "Cookie Policy" [ref=e379] [cursor=pointer]:
+              - /url: /cookies
+        - generic [ref=e380]:
+          - paragraph [ref=e381]: Contact
+          - link "info@biosoil.com" [ref=e382] [cursor=pointer]:
+            - /url: mailto:info@biosoil.com
+          - paragraph [ref=e383]: Corvallis, OR 97330
+    - generic [ref=e384]: © 2026 Bio Soil — Soil Food Web Institute. All rights reserved.
