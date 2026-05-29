@@ -16,31 +16,9 @@ const BioSilkChatWidget = dynamic(
 );
 
 /* ─── Announcement Bar ─── */
+/* ─── Announcement Bar ─── */
 function AnnouncementBar() {
-  const [visible, setVisible] = useState(true);
-  if (!visible) return null;
-  return (
-    <div className="relative bg-[#1e3318] py-2.5 text-center text-sm text-[#c8dbb8]">
-      <span className="mr-2">🌱</span>
-      <span>
-        <strong className="text-white">New:</strong> SilkSoil — our member-exclusive soil analysis
-        system — is now live.
-      </span>
-      <Link
-        href="/silksoil"
-        className="ml-3 underline underline-offset-2 text-[#a8cc8a] hover:text-white transition-colors"
-      >
-        Learn more →
-      </Link>
-      <button
-        onClick={() => setVisible(false)}
-        aria-label="Dismiss announcement"
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7a9a6a] hover:text-white transition-colors text-lg leading-none"
-      >
-        ×
-      </button>
-    </div>
-  );
+  return null;
 }
 
 type NavItemType = {
@@ -81,8 +59,8 @@ function NavItem({ item, pathname }: { item: NavItemType; pathname: string }) {
         href={item.href}
         className={`px-3.5 py-2 text-[0.875rem] font-medium rounded-full transition-all duration-150 ${
           isActive
-            ? "bg-white text-[#1e3318] shadow-sm"
-            : "text-[#3d5035] hover:text-[#1e3318] hover:bg-white/70"
+            ? "bg-[#d4933d] text-[#10200b] shadow-sm"
+            : "text-[#c6d8bd] hover:bg-[#243c1b] hover:text-[#d4933d]"
         }`}
       >
         {item.label}
@@ -97,8 +75,8 @@ function NavItem({ item, pathname }: { item: NavItemType; pathname: string }) {
         onClick={() => setOpen(!open)}
         className={`flex items-center gap-1.5 px-3.5 py-2 text-[0.875rem] font-medium rounded-full transition-all duration-150 ${
           isActive
-            ? "bg-white text-[#1e3318] shadow-sm"
-            : "text-[#3d5035] hover:text-[#1e3318] hover:bg-white/70"
+            ? "bg-[#d4933d] text-[#10200b] shadow-sm"
+            : "text-[#c6d8bd] hover:bg-[#243c1b] hover:text-[#d4933d]"
         }`}
       >
         {item.label}
@@ -112,13 +90,13 @@ function NavItem({ item, pathname }: { item: NavItemType; pathname: string }) {
         </svg>
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-2 min-w-[200px] rounded-2xl border border-[rgba(58,92,47,0.12)] bg-white/95 backdrop-blur-md shadow-xl py-2 z-50 animate-fade-in">
+        <div className="absolute left-0 top-full mt-2 min-w-[200px] rounded-2xl border border-[rgba(168,204,138,0.16)] bg-[#13220e]/95 py-2 shadow-xl backdrop-blur-md z-50 animate-fade-in">
           {children.map((child) => (
             <Link
               key={child.href}
               href={child.href}
               onClick={() => setOpen(false)}
-              className="block px-5 py-3 text-sm text-[#3d5035] hover:bg-[#f0f7ed] hover:text-[#1e3318] transition-colors"
+              className="block px-5 py-3 text-sm text-[#c6d8bd] transition-colors hover:bg-[#243c1b] hover:text-[#d4933d]"
             >
               {child.label}
             </Link>
@@ -151,7 +129,7 @@ function MobileMenu({
     { href: "/contact", label: "Contact Us" },
     ...(session
       ? [{ href: "/dashboard", label: "Member Portal" }]
-      : [{ href: "/login", label: "Sign In" }]),
+      : []),
     ...(isOrgAdmin ? [{ href: "/admin", label: "Admin Panel" }] : []),
   ];
 
@@ -160,21 +138,21 @@ function MobileMenu({
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 bg-[#1a2214]/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-[1300] bg-[#1a2214]/70 backdrop-blur-sm transition-opacity duration-300 ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       />
       {/* Slide-out panel */}
       <div
         id="mobile-nav-drawer"
-        className={`fixed top-0 right-0 h-full w-[300px] bg-[#f5efdf] z-50 shadow-2xl transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 z-[1400] flex h-full w-[300px] flex-col bg-[#101d0c] shadow-2xl transition-transform duration-300 ease-in-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[rgba(58,92,47,0.14)]">
-          <span className="font-serif text-xl text-[#1e3318]">Bio Soil</span>
+        <div className="flex items-center justify-between border-b border-[rgba(168,204,138,0.14)] px-6 py-5">
+          <span className="font-serif text-xl text-[#edf5e8]">Bio Soil</span>
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="text-[#5a7050] hover:text-[#1e3318] transition-colors"
+            className="text-[#a8cc8a] transition-colors hover:text-[#d4933d]"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -188,11 +166,11 @@ function MobileMenu({
         </div>
         <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
           {session ? (
-            <div className="mb-4 rounded-xl bg-[rgba(58,92,47,0.08)] px-4 py-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#5a7050]">
+            <div className="mb-4 rounded-xl border border-[rgba(168,204,138,0.14)] bg-[rgba(168,204,138,0.07)] px-4 py-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8faa7a]">
                 Signed in
               </p>
-              <p className="mt-1 text-sm font-semibold text-[#1e3318]">{displayName}</p>
+              <p className="mt-1 text-sm font-semibold text-[#edf5e8]">{displayName}</p>
             </div>
           ) : null}
           {navItems.map((item) => (
@@ -202,27 +180,27 @@ function MobileMenu({
               onClick={onClose}
               className={`block px-4 py-3.5 rounded-xl text-base font-medium transition-colors ${
                 pathname === item.href
-                  ? "bg-[#1e3318] text-white"
-                  : "text-[#3d5035] hover:bg-[rgba(58,92,47,0.08)] hover:text-[#1e3318]"
+                  ? "bg-[#d4933d] text-[#10200b]"
+                  : "text-[#c6d8bd] hover:bg-[rgba(168,204,138,0.08)] hover:text-[#d4933d]"
               }`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="px-4 py-6 border-t border-[rgba(58,92,47,0.14)]">
+        <div className="border-t border-[rgba(168,204,138,0.14)] px-4 py-6">
           <Link
             href={session ? "/silksoil" : "/login"}
             onClick={onClose}
-            className="block w-full text-center bg-[#3a5c2f] text-white rounded-full py-3.5 font-semibold hover:bg-[#1e3318] transition-colors"
+            className="block w-full rounded-full bg-[#d4933d] py-3.5 text-center font-semibold text-[#10200b] transition-colors hover:bg-[#b97849]"
           >
-            {session ? "Open SilkSoil" : "Sign In to Access SilkSoil"}
+            {session ? "Open SilkSoil" : "Join Us"}
           </Link>
           {session ? (
             <SignOutButton
               redirectTo="/"
               label="Sign out"
-              className="mt-3 block w-full rounded-full border border-[rgba(58,92,47,0.18)] py-3 text-sm font-semibold text-[#3d5035] transition-colors hover:bg-[rgba(58,92,47,0.08)] hover:text-[#1e3318]"
+              className="mt-3 block w-full rounded-full border border-[rgba(168,204,138,0.18)] py-3 text-sm font-semibold text-[#c6d8bd] transition-colors hover:bg-[rgba(168,204,138,0.08)] hover:text-[#d4933d]"
             />
           ) : null}
         </div>
@@ -323,7 +301,7 @@ export function MarketingShell({
   }, [mobileOpen]);
 
   return (
-    <div className="min-h-screen bg-[#f5efdf]">
+    <div className="min-h-screen bg-[#101d0c]">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[1500] focus:rounded-full focus:bg-[#1e3318] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
@@ -336,17 +314,17 @@ export function MarketingShell({
       <header
         className={`sticky top-0 z-[1200] transition-all duration-300 ${
           scrolled
-            ? "premium-stroke bg-[linear-gradient(180deg,rgba(250,245,234,0.96),rgba(244,237,221,0.92))] backdrop-blur-md border-b border-[rgba(58,92,47,0.14)] shadow-sm"
-            : "premium-stroke bg-[linear-gradient(180deg,rgba(248,242,231,0.9),rgba(244,237,221,0.84))] backdrop-blur border-b border-[rgba(58,92,47,0.10)]"
+            ? "premium-stroke border-b border-[rgba(168,204,138,0.16)] bg-[linear-gradient(180deg,rgba(13,24,9,0.96),rgba(20,36,15,0.92))] shadow-[0_16px_50px_rgba(4,8,4,0.28)] backdrop-blur-md"
+            : "premium-stroke border-b border-[rgba(168,204,138,0.10)] bg-[linear-gradient(180deg,rgba(13,24,9,0.88),rgba(20,36,15,0.78))] backdrop-blur"
         }`}
       >
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-6 py-3.5">
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-none shrink-0">
-            <span className="font-serif text-[1.65rem] text-[#1e3318] tracking-tight">
+            <span className="font-serif text-[1.65rem] text-[#edf5e8] tracking-tight">
               Bio Soil
             </span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#5a7050] mt-0.5">
+            <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#a8cc8a]">
               Soil Food Web Institute
             </span>
           </Link>
@@ -366,40 +344,33 @@ export function MarketingShell({
           <div className="hidden md:flex items-center gap-3">
             {session ? (
               <>
-                <div className="premium-stroke rounded-full border border-[rgba(58,92,47,0.14)] bg-white/80 px-4 py-2 text-right shadow-sm">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#5a7050]">
+                <div className="premium-stroke rounded-full border border-[rgba(168,204,138,0.14)] bg-[rgba(168,204,138,0.08)] px-4 py-2 text-right shadow-sm">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8faa7a]">
                     Signed in
                   </p>
-                  <p className="text-sm font-semibold text-[#1e3318]">{displayName}</p>
+                  <p className="text-sm font-semibold text-[#edf5e8]">{displayName}</p>
                 </div>
                 {isOrgAdmin ? (
                   <Link
                     href="/admin"
-                    className="rounded-full border border-[rgba(58,92,47,0.14)] px-5 py-2.5 text-sm font-semibold text-[#1e3318] hover:bg-white/80 transition-colors shadow-sm"
+                    className="rounded-full border border-[rgba(168,204,138,0.18)] px-5 py-2.5 text-sm font-semibold text-[#c6d8bd] shadow-sm transition-colors hover:bg-[rgba(168,204,138,0.08)] hover:text-[#d4933d]"
                   >
                     Admin
                   </Link>
                 ) : null}
                 <Link
                   href="/dashboard"
-                  className="rounded-full bg-[#3a5c2f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1e3318] transition-colors shadow-sm"
+                  className="rounded-full bg-[#d4933d] px-5 py-2.5 text-sm font-semibold text-[#10200b] shadow-sm transition-colors hover:bg-[#b97849]"
                 >
                   Member Portal
                 </Link>
                 <SignOutButton
                   redirectTo="/"
                   label="Sign out"
-                  className="rounded-full border border-[rgba(58,92,47,0.14)] px-5 py-2.5 text-sm font-semibold text-[#1e3318] hover:bg-white/80 transition-colors shadow-sm"
+                  className="rounded-full border border-[rgba(168,204,138,0.18)] px-5 py-2.5 text-sm font-semibold text-[#c6d8bd] shadow-sm transition-colors hover:bg-[rgba(168,204,138,0.08)] hover:text-[#d4933d]"
                 />
               </>
-            ) : (
-              <Link
-                href="/login"
-                className="rounded-full bg-[#3a5c2f] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1e3318] transition-colors shadow-sm"
-              >
-                Sign In
-              </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Mobile hamburger */}
@@ -409,7 +380,7 @@ export function MarketingShell({
             aria-label="Open menu"
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav-drawer"
-            className="md:hidden text-[#3d5035] hover:text-[#1e3318] transition-colors p-1"
+            className="p-1 text-[#c6d8bd] transition-colors hover:text-[#d4933d] md:hidden"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -451,7 +422,7 @@ export function MarketingShell({
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="rounded-full border border-white/30 px-7 py-3.5 font-semibold text-white hover:bg-white/10 transition-colors"
+                  className="rounded-full border border-[rgba(168,204,138,0.3)] px-7 py-3.5 font-semibold text-[#edf5e8] transition-colors hover:bg-[rgba(168,204,138,0.08)]"
                 >
                   Member Portal
                 </Link>
@@ -472,11 +443,11 @@ export function MarketingShell({
                   href="/login"
                   className="rounded-full bg-[#d4933d] px-7 py-3.5 font-semibold text-white hover:bg-[#b97849] transition-colors shadow-md"
                 >
-                  Sign In to Access SilkSoil
+                  Join Us
                 </Link>
                 <Link
                   href="/about"
-                  className="rounded-full border border-white/30 px-7 py-3.5 font-semibold text-white hover:bg-white/10 transition-colors"
+                  className="rounded-full border border-[rgba(168,204,138,0.3)] px-7 py-3.5 font-semibold text-[#edf5e8] transition-colors hover:bg-[rgba(168,204,138,0.08)]"
                 >
                   Learn the Science
                 </Link>
@@ -521,7 +492,7 @@ export function MarketingShell({
             <ul className="space-y-3 text-sm">
               {[
                 ["SilkSoil Analysis", "/silksoil"],
-                ["Sign In", "/login"],
+                ["Join Us", "/login"],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link href={href} className="hover:text-white transition-colors">

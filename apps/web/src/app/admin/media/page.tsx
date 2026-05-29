@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { AdminAsyncState } from "@/components/admin/AdminAsyncState";
 import { cmsApi } from "@/lib/cmsApi";
 import type { MediaAsset } from "@/lib/cmsTypes";
@@ -12,9 +12,16 @@ export default function AdminMediaPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [urlInput, setUrlInput] = useState("");
-  const [altInput, setAltInput] = useState("");
-  const [filenameInput, setFilenameInput] = useState("");
+  const [urlAltInput, setUrlAltInput] = useState("");
+  const [urlFilenameInput, setUrlFilenameInput] = useState("");
+  const [uploadAltInput, setUploadAltInput] = useState("");
+  const [uploadFilenameInput, setUploadFilenameInput] = useState("");
+  const selectedFileLabel = useMemo(
+    () => selectedFile ? `${selectedFile.name} • ${Math.round(selectedFile.size / 1024)} KB` : "No file chosen yet",
+    [selectedFile],
+  );
 
   async function reload() {
     setLoading(true);
@@ -40,16 +47,36 @@ export default function AdminMediaPage() {
     try {
       await cmsApi.createMedia({
         url: urlInput,
-        filename: filenameInput || urlInput.split("/").pop() || "image",
-        alt_text: altInput,
+        filename: urlFilenameInput || urlInput.split("/").pop() || "image",
+        alt_text: urlAltInput,
         mime_type: "image/*",
       });
       setUrlInput("");
-      setAltInput("");
-      setFilenameInput("");
+      setUrlAltInput("");
+      setUrlFilenameInput("");
       await reload();
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Failed to add media.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function handleUploadFile() {
+    if (!selectedFile) return;
+    setUploading(true);
+    setError(null);
+    try {
+      await cmsApi.uploadMedia(selectedFile, {
+        altText: uploadAltInput,
+        filename: uploadFilenameInput || selectedFile.name,
+      });
+      setSelectedFile(null);
+      setUploadAltInput("");
+      setUploadFilenameInput("");
+      await reload();
+    } catch (uploadError: unknown) {
+      setError(uploadError instanceof Error ? uploadError.message : "Failed to upload media.");
     } finally {
       setUploading(false);
     }
@@ -65,6 +92,10 @@ export default function AdminMediaPage() {
     navigator.clipboard.writeText(url);
     setCopied(url);
     setTimeout(() => setCopied(null), 1500);
+  }
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    setSelectedFile(event.target.files?.[0] ?? null);
   }
 
   if (loading) {
@@ -102,14 +133,70 @@ export default function AdminMediaPage() {
         <p className="text-[#5a7050] text-sm mt-1">{assets.length} assets registered</p>
       </div>
 
-      {/* Add by URL */}
-      <div className="rounded-2xl border border-[rgba(168,204,138,0.12)] bg-[rgba(255,255,255,0.03)] p-6 mb-8">
-        <h2 className="font-serif text-lg text-white mb-4">Register Image by URL</h2>
+      <div className="grid gap-6 mb-8 lg:grid-cols-[1.2fr_0.9fr]">
+        <div className="rounded-2xl border border-[rgba(168,204,138,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-6">
+          <h2 className="font-serif text-lg text-white mb-3">Upload to Supabase Storage</h2>
+          <p className="text-xs text-[#5a7050] mb-4">
+            Choose an image file and it will be uploaded straight into your configured Supabase bucket, then added to the media library automatically.
+          </p>
+          <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-[rgba(168,204,138,0.2)] bg-[rgba(255,255,255,0.03)] px-5 py-8 text-center transition-colors hover:border-[rgba(168,204,138,0.45)] hover:bg-[rgba(255,255,255,0.05)]">
+            <span className="text-sm font-medium text-white">Choose image</span>
+            <span className="mt-1 text-xs text-[#5a7050]">PNG, JPG, WEBP, SVG and similar public site assets</span>
+            <span className="mt-3 rounded-full border border-[rgba(168,204,138,0.18)] px-3 py-1 text-xs text-[#a8cc8a]">
+              {selectedFileLabel}
+            </span>
+            <input
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              onChange={handleFileChange}
+            />
+          </label>
+          <div className="mt-4 grid gap-3 md:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-[0.15em] text-[#5a8050] mb-1.5">
+                Stored filename
+              </label>
+              <input
+                className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(168,204,138,0.15)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#a8cc8a]"
+                value={uploadFilenameInput}
+                onChange={(e) => setUploadFilenameInput(e.target.value)}
+                placeholder={selectedFile?.name ?? "soil-team-photo.jpg"}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-[0.15em] text-[#5a8050] mb-1.5">
+                Alt text (accessibility)
+              </label>
+              <input
+                className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(168,204,138,0.15)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#a8cc8a]"
+                value={uploadAltInput}
+                onChange={(e) => setUploadAltInput(e.target.value)}
+                placeholder="Description of image…"
+              />
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleUploadFile}
+              disabled={uploading || !selectedFile}
+              className="px-5 py-2.5 rounded-xl bg-[#3a5c2f] hover:bg-[#4a7a3a] text-white text-sm font-semibold transition-colors disabled:opacity-50"
+            >
+              {uploading ? "Uploading…" : "Upload to Library"}
+            </button>
+            <p className="text-xs text-[#5a7050]">
+              This is the recommended path for fully dynamic site images.
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[rgba(168,204,138,0.12)] bg-[rgba(255,255,255,0.03)] p-6">
+          <h2 className="font-serif text-lg text-white mb-4">Register Image by URL</h2>
         <p className="text-xs text-[#5a7050] mb-4">
           Paste a URL to any public image (Supabase Storage, CDN, etc.) to add it to the library.
         </p>
-        <div className="grid grid-cols-3 gap-3 mb-3">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 gap-3 mb-3">
+          <div>
             <label className="block text-xs font-semibold uppercase tracking-[0.15em] text-[#5a8050] mb-1.5">
               Image URL
             </label>
@@ -126,24 +213,24 @@ export default function AdminMediaPage() {
             </label>
             <input
               className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(168,204,138,0.15)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#a8cc8a]"
-              value={filenameInput}
-              onChange={(e) => setFilenameInput(e.target.value)}
+              value={urlFilenameInput}
+              onChange={(e) => setUrlFilenameInput(e.target.value)}
               placeholder="my-image.jpg"
             />
           </div>
-          <div className="col-span-2">
+          <div>
             <label className="block text-xs font-semibold uppercase tracking-[0.15em] text-[#5a8050] mb-1.5">
               Alt text (accessibility)
             </label>
             <input
               className="w-full bg-[rgba(255,255,255,0.05)] border border-[rgba(168,204,138,0.15)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#a8cc8a]"
-              value={altInput}
-              onChange={(e) => setAltInput(e.target.value)}
+              value={urlAltInput}
+              onChange={(e) => setUrlAltInput(e.target.value)}
               placeholder="Description of image…"
             />
           </div>
         </div>
-        {error && <p className="text-red-400 text-sm mb-3">✗ {error}</p>}
+        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
         <button
           onClick={handleAddUrl}
           disabled={uploading || !urlInput.trim()}
@@ -151,6 +238,7 @@ export default function AdminMediaPage() {
         >
           {uploading ? "Adding…" : "Add to Library"}
         </button>
+      </div>
       </div>
 
       {/* Grid */}
@@ -180,6 +268,9 @@ export default function AdminMediaPage() {
                 <p className="text-white text-xs font-medium truncate">{a.filename}</p>
                 <p className="text-[#5a7050] text-xs mt-0.5 truncate">
                   {a.alt_text || "No alt text"}
+                </p>
+                <p className="text-[#5a7050] text-[11px] mt-1 truncate">
+                  {a.storage_key ? "Managed in Supabase Storage" : "External URL asset"}
                 </p>
                 <div className="mt-2 flex gap-2">
                   <button

@@ -415,6 +415,8 @@ create table if not exists media_assets (
   alt_text text,
   mime_type varchar(100),
   byte_size integer,
+  storage_bucket varchar(255),
+  storage_key varchar(1024),
   uploaded_at timestamptz not null default now(),
   uploaded_by_user_id uuid references users(id) on delete set null
 );

@@ -71,6 +71,7 @@ app/services/run_service.py
 app/services/scenario_service.py
 app/services/serializers.py
 app/services/soil_sample_service.py
+app/services/supabase_storage.py
 app/services/chat/__init__.py
 app/services/chat/assistant_admin_service.py
 app/services/chat/assistant_service.py

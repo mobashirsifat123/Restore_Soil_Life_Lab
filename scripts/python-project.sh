@@ -58,4 +58,23 @@ cleanup_lock
 trap - EXIT
 
 cd "${PROJECT_DIR}"
-PATH="${VENV_DIR}/bin:${PATH}" exec "$@"
+
+rewrite_command=("$@")
+if [[ $# -gt 0 ]]; then
+  case "$1" in
+    alembic)
+      rewrite_command=("${VENV_DIR}/bin/python" -m alembic "${@:2}")
+      ;;
+    pytest)
+      rewrite_command=("${VENV_DIR}/bin/python" -m pytest "${@:2}")
+      ;;
+    ruff)
+      rewrite_command=("${VENV_DIR}/bin/python" -m ruff "${@:2}")
+      ;;
+    uvicorn)
+      rewrite_command=("${VENV_DIR}/bin/python" -m uvicorn "${@:2}")
+      ;;
+  esac
+fi
+
+PATH="${VENV_DIR}/bin:${PATH}" exec "${rewrite_command[@]}"

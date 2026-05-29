@@ -214,14 +214,19 @@ class CmsRepository:
             alt_text=payload.alt_text,
             mime_type=payload.mime_type,
             byte_size=payload.byte_size,
+            storage_bucket=payload.storage_bucket,
+            storage_key=payload.storage_key,
             uploaded_by_user_id=user_id,
         )
         self.session.add(asset)
         self.session.flush()
         return asset
 
+    def get_asset_by_id(self, asset_id: UUID) -> MediaAsset | None:
+        return self.session.scalar(sa.select(MediaAsset).where(MediaAsset.id == asset_id))
+
     def delete_asset(self, asset_id: UUID) -> bool:
-        asset = self.session.scalar(sa.select(MediaAsset).where(MediaAsset.id == asset_id))
+        asset = self.get_asset_by_id(asset_id)
         if asset is None:
             return False
         self.session.delete(asset)

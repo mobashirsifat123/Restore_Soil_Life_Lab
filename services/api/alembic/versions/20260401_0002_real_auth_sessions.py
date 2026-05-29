@@ -127,7 +127,7 @@ def upgrade() -> None:
             """
             UPDATE users
             SET password_hash = :password_hash
-            WHERE id = :user_id
+            WHERE id = CAST(:user_id AS UUID)
             """
         ).bindparams(
             user_id=DEBUG_USER_ID,
