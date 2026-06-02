@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from app.schemas.common import ApiModel
 
@@ -42,22 +42,43 @@ class ForgotPasswordRequest(ApiModel):
 class ForgotPasswordResponse(ApiModel):
     message: str
     development_code: str | None = None
+    development_reset_url: str | None = None
 
 
 class ResetPasswordRequest(ApiModel):
-    email: str = Field(min_length=3, max_length=320)
-    code: str = Field(min_length=6, max_length=6)
+    email: str | None = Field(default=None, min_length=3, max_length=320)
+    code: str | None = Field(default=None, min_length=6, max_length=6)
+    token: str | None = Field(default=None, min_length=12, max_length=512)
     new_password: str = Field(min_length=8, max_length=255)
 
     @field_validator("email")
     @classmethod
-    def normalize_reset_email(cls, value: str) -> str:
+    def normalize_reset_email(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
         return value.strip().lower()
 
     @field_validator("code")
     @classmethod
-    def normalize_code(cls, value: str) -> str:
+    def normalize_code(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
         return value.strip()
+
+    @field_validator("token")
+    @classmethod
+    def normalize_token(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return value.strip()
+
+    @model_validator(mode="after")
+    def validate_reset_inputs(self) -> "ResetPasswordRequest":
+        if self.token:
+            return self
+        if self.email and self.code:
+            return self
+        raise ValueError("Provide either a reset token or an email plus recovery code.")
 
 
 class SessionUser(ApiModel):

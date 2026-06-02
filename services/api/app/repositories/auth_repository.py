@@ -272,7 +272,7 @@ class AuthRepository:
             code_hash=code_hash,
             user_agent=user_agent,
             ip_address=ip_address,
-            expires_at=now + timedelta(minutes=15),
+            expires_at=now + timedelta(minutes=ttl_minutes),
         )
         self.session.add(token)
         self.session.commit()
@@ -293,6 +293,25 @@ class AuthRepository:
                 User.deleted_at.is_(None),
                 User.is_active.is_(True),
                 PasswordResetToken.code_hash == code_hash,
+                PasswordResetToken.used_at.is_(None),
+                PasswordResetToken.expires_at > datetime.now(UTC),
+            )
+            .order_by(PasswordResetToken.created_at.desc())
+        )
+        return self.session.execute(statement).first()
+
+    def get_valid_password_reset_token_by_hash(
+        self,
+        *,
+        token_hash: str,
+    ) -> tuple[PasswordResetToken, User] | None:
+        statement = (
+            select(PasswordResetToken, User)
+            .join(User, User.id == PasswordResetToken.user_id)
+            .where(
+                User.deleted_at.is_(None),
+                User.is_active.is_(True),
+                PasswordResetToken.code_hash == token_hash,
                 PasswordResetToken.used_at.is_(None),
                 PasswordResetToken.expires_at > datetime.now(UTC),
             )

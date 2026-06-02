@@ -3,10 +3,11 @@ from __future__ import annotations
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 
 from app.api.dependencies.auth import CurrentUser, require_admin_user
 from app.api.dependencies.db import DatabaseSession
+from app.core.config import get_settings
 from app.repositories.admin_repository import AdminRepository
 from app.repositories.cms_repository import CmsRepository
 from app.schemas.cms import (
@@ -24,6 +25,7 @@ from app.schemas.cms import (
     MediaAssetCreate,
     MediaAssetResponse,
 )
+from app.services.supabase_storage import SupabaseStorageService
 
 router = APIRouter(prefix="/cms", tags=["cms"])
 
@@ -419,6 +421,48 @@ def create_media(
     return MediaAssetResponse.model_validate(asset)
 
 
+@router.post(
+    "/media/upload",
+    response_model=MediaAssetResponse,
+    status_code=status.HTTP_201_CREATED,
+    operation_id="cms_uploadMediaAsset",
+    summary="Upload a media asset to Supabase Storage (admin only)",
+    dependencies=[require_admin_user()],
+)
+def upload_media(
+    repo: CmsRepoDep,
+    db: DatabaseSession,
+    current_user: CurrentUser,
+    file: UploadFile = File(...),
+    alt_text: str | None = Form(default=None),
+    filename: str | None = Form(default=None),
+) -> MediaAssetResponse:
+    storage = SupabaseStorageService(get_settings())
+    uploaded = storage.upload_media(file=file, filename=filename)
+    asset = repo.create_asset(
+        MediaAssetCreate(
+            filename=filename or file.filename or "upload",
+            url=uploaded.public_url,
+            alt_text=alt_text,
+            mime_type=uploaded.content_type,
+            byte_size=uploaded.byte_size,
+            storage_bucket=uploaded.bucket,
+            storage_key=uploaded.path,
+        ),
+        user_id=current_user.user_id,
+    )
+    AdminRepository(db).create_activity_log(
+        organization_id=current_user.organization_id,
+        activity_type="media_upload",
+        activity_label="Uploaded media to storage",
+        user_id=current_user.user_id,
+        user_email=current_user.email,
+        details=asset.filename,
+    )
+    db.commit()
+    return MediaAssetResponse.model_validate(asset)
+
+
 @router.delete(
     "/media/{asset_id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -427,8 +471,12 @@ def create_media(
     dependencies=[require_admin_user()],
 )
 def delete_media(asset_id: UUID, repo: CmsRepoDep, db: DatabaseSession, _: CurrentUser) -> None:
-    assets = repo.list_assets()
-    asset = next((item for item in assets if item.id == asset_id), None)
+    asset = repo.get_asset_by_id(asset_id)
+    if asset is not None:
+        SupabaseStorageService(get_settings()).delete_media(
+            storage_bucket=asset.storage_bucket,
+            storage_key=asset.storage_key,
+        )
     deleted = repo.delete_asset(asset_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Asset not found.")

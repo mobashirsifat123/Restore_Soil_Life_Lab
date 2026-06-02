@@ -96,6 +96,8 @@ export interface MediaAsset {
   alt_text?: string | null;
   mime_type?: string | null;
   byte_size?: number | null;
+  storage_bucket?: string | null;
+  storage_key?: string | null;
   uploaded_at: string;
 }
 
@@ -133,6 +135,7 @@ export type HomeProblem = {
   body: string;
   icon: string;
   link: string;
+  image?: string;
 };
 export type HomeStat = {
   number: string;

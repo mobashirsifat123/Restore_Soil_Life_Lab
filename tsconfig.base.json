@@ -14,11 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "typeRoots": [
-      "./node_modules/.pnpm/@types+react@19.2.14/node_modules/@types",
-      "./node_modules/.pnpm/@types+react-dom@19.2.3_@types+react@19.2.14/node_modules/@types",
-      "./node_modules/@types"
-    ],
+
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {

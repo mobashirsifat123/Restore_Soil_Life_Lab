@@ -25,6 +25,9 @@ __pycache__/
 .venv/
 *.py[cod]
 
+# Local database SQL helpers
+services/api/sql/
+
 # Local data and artifacts
 .data/
 artifacts/

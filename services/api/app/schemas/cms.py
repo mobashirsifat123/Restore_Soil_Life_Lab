@@ -140,6 +140,8 @@ class MediaAssetResponse(BaseModel):
     alt_text: str | None
     mime_type: str | None
     byte_size: int | None
+    storage_bucket: str | None
+    storage_key: str | None
     uploaded_at: datetime
 
 
@@ -149,3 +151,5 @@ class MediaAssetCreate(BaseModel):
     alt_text: str | None = None
     mime_type: str | None = None
     byte_size: int | None = None
+    storage_bucket: str | None = None
+    storage_key: str | None = None

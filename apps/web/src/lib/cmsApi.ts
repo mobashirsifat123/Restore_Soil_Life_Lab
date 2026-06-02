@@ -57,6 +57,44 @@ async function apiFetch<T>(path: string, opts?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+async function apiUpload<T>(path: string, formData: FormData): Promise<T> {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), CMS_FETCH_TIMEOUT_MS * 3);
+  let res: Response;
+
+  try {
+    res = await fetch(`${API}${path}`, {
+      method: "POST",
+      credentials: "include",
+      signal: controller.signal,
+      body: formData,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("The upload timed out. Please retry after the API is healthy.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+
+  if (!res.ok) {
+    const bodyText = await res.text();
+    let message = bodyText || `HTTP ${res.status}`;
+    if (bodyText) {
+      try {
+        const body = JSON.parse(bodyText) as { detail?: string; message?: string };
+        message = body.detail ?? body.message ?? message;
+      } catch {
+        message = bodyText;
+      }
+    }
+    throw new Error(message);
+  }
+
+  return res.json() as Promise<T>;
+}
+
 export const cmsApi = {
   getPage: <TSections extends Record<string, unknown> = Record<string, unknown>>(slug: string) =>
     apiFetch<CmsPageResponse<TSections>>(`/cms/pages/${slug}`),
@@ -84,5 +122,16 @@ export const cmsApi = {
   listMedia: () => apiFetch<MediaAsset[]>("/cms/media"),
   createMedia: (data: Record<string, unknown>) =>
     apiFetch<MediaAsset>("/cms/media", { method: "POST", body: JSON.stringify(data) }),
+  uploadMedia: (file: File, options?: { altText?: string; filename?: string }) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (options?.altText) {
+      formData.append("alt_text", options.altText);
+    }
+    if (options?.filename) {
+      formData.append("filename", options.filename);
+    }
+    return apiUpload<MediaAsset>("/cms/media/upload", formData);
+  },
   deleteMedia: (id: string) => apiFetch(`/cms/media/${id}`, { method: "DELETE" }),
 };

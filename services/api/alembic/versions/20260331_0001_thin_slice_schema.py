@@ -19,9 +19,9 @@ depends_on = None
 DEBUG_ORGANIZATION_ID = "00000000-0000-7000-0000-000000000101"
 DEBUG_USER_ID = "00000000-0000-7000-0000-000000000001"
 
-project_status = sa.Enum("active", "archived", name="project_status")
-scenario_status = sa.Enum("active", "archived", name="scenario_status")
-run_status = sa.Enum(
+project_status = postgresql.ENUM("active", "archived", name="project_status", create_type=False)
+scenario_status = postgresql.ENUM("active", "archived", name="scenario_status", create_type=False)
+run_status = postgresql.ENUM(
     "draft",
     "queued",
     "running",
@@ -30,8 +30,9 @@ run_status = sa.Enum(
     "cancel_requested",
     "canceled",
     name="run_status",
+    create_type=False,
 )
-artifact_type = sa.Enum(
+artifact_type = postgresql.ENUM(
     "result_json",
     "summary_json",
     "csv_export",
@@ -40,6 +41,7 @@ artifact_type = sa.Enum(
     "log_bundle",
     "other",
     name="artifact_type",
+    create_type=False,
 )
 
 

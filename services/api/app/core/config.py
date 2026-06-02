@@ -27,7 +27,14 @@ class Settings(BaseSettings):
     auth_session_cookie_name: str = Field(default="bio_session", alias="AUTH_SESSION_COOKIE_NAME")
     auth_session_ttl_hours: int = Field(default=168, alias="AUTH_SESSION_TTL_HOURS")
     auth_session_secure_cookie: bool = Field(default=False, alias="AUTH_SESSION_SECURE_COOKIE")
+    frontend_url: str | None = Field(default=None, alias="FRONTEND_URL")
     admin_user_emails_raw: str = Field(default="", alias="ADMIN_USER_EMAILS")
+    smtp_host: str | None = Field(default=None, alias="SMTP_HOST")
+    smtp_port: int = Field(default=587, alias="SMTP_PORT")
+    smtp_username: str | None = Field(default=None, alias="SMTP_USERNAME")
+    smtp_password: str | None = Field(default=None, alias="SMTP_PASSWORD")
+    smtp_from_email: str | None = Field(default=None, alias="SMTP_FROM_EMAIL")
+    smtp_starttls: bool = Field(default=True, alias="SMTP_STARTTLS")
     debug_auth_enabled: bool = Field(default=False, alias="DEBUG_AUTH_ENABLED")
     debug_auth_user_id: UUID = Field(
         default=UUID("00000000-0000-7000-0000-000000000001"),
@@ -59,6 +66,9 @@ class Settings(BaseSettings):
     database_echo: bool = Field(default=False, alias="DATABASE_ECHO")
     redis_url: str = Field(alias="REDIS_URL")
     allowed_origins_raw: str = Field(default="", alias="ALLOWED_ORIGINS")
+    supabase_url: str | None = Field(default=None, alias="SUPABASE_URL")
+    supabase_service_role_key: str | None = Field(default=None, alias="SUPABASE_SERVICE_ROLE_KEY")
+    supabase_storage_bucket: str = Field(default="site-media", alias="SUPABASE_STORAGE_BUCKET")
     deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
     deepseek_base_url: str = Field(default="https://api.deepseek.com", alias="DEEPSEEK_BASE_URL")
     deepseek_model: str = Field(default="deepseek-chat", alias="DEEPSEEK_MODEL")
@@ -93,6 +103,14 @@ class Settings(BaseSettings):
         if self.gemini_api_key:
             return "gemini"
         return "deepseek"
+
+    @property
+    def has_supabase_storage(self) -> bool:
+        return bool(self.supabase_url and self.supabase_service_role_key and self.supabase_storage_bucket)
+
+    @property
+    def password_reset_email_enabled(self) -> bool:
+        return bool(self.smtp_host and self.smtp_from_email)
 
     @property
     def default_chat_model(self) -> str:

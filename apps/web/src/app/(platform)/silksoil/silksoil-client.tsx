@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import type { CalculatorFormula } from "@/lib/cmsTypes";
@@ -144,112 +143,7 @@ function componentStatusPill(status: "strong" | "watch" | "weak") {
   return "bg-[rgba(191,75,62,0.12)] text-[#8e352b]";
 }
 
-function SilkSoilTeaser() {
-  const indicators = [
-    {
-      icon: "🌡️",
-      name: "Temperature",
-      note: "Controls microbial activity and nutrient cycling speed.",
-    },
-    {
-      icon: "🍄",
-      name: "Fungi",
-      note: "Supports aggregation, residue breakdown, and fungal-dominant systems.",
-    },
-    {
-      icon: "🔬",
-      name: "Protozoa",
-      note: "Grazers help release nutrients that bacteria temporarily hold.",
-    },
-    { icon: "🦠", name: "Bacteria", note: "Drives fast nutrient turnover and residue processing." },
-    {
-      icon: "🪱",
-      name: "Nematodes",
-      note: "Signals whether the food web is moving beyond simple biomass.",
-    },
-    {
-      icon: "🧱",
-      name: "Compaction",
-      note: "Aeration and pore space determine whether biology can function.",
-    },
-  ];
 
-  return (
-    <div className="min-h-[70vh]">
-      <div className="relative mb-8 overflow-hidden rounded-3xl bg-[#1e3318] px-8 py-12 text-center text-white">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[rgba(212,147,61,0.08)] blur-3xl" />
-        </div>
-        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#3a5c2f] text-3xl">
-          🔒
-        </div>
-        <p className="editorial-kicker mb-3 text-[#a8cc8a]">Member-exclusive tool</p>
-        <h1 className="mb-4 font-serif text-[2.5rem] leading-tight tracking-[-0.04em] md:text-[3.2rem]">
-          SilkSoil Analysis System
-        </h1>
-        <p className="mx-auto mb-8 max-w-2xl text-[#9ab88a] leading-8">
-          SilkSoil interprets chemistry, physical habitat, microbial abundance, and food-web balance
-          so farmers can see which soil constraints matter most and how to improve them.
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/login"
-            className="rounded-full bg-[#d4933d] px-8 py-4 text-base font-semibold text-white shadow-md transition-colors hover:bg-[#b97849]"
-          >
-            Sign In to Access SilkSoil
-          </Link>
-          <Link
-            href="/contact"
-            className="rounded-full border border-white/20 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10"
-          >
-            Request Membership
-          </Link>
-        </div>
-      </div>
-
-      <div className="mb-8 grid gap-6 lg:grid-cols-[1fr_340px]">
-        <div className="rounded-3xl border border-[rgba(58,92,47,0.12)] bg-white p-7">
-          <p className="editorial-kicker mb-3 text-[#3a5c2f]">What SilkSoil analyses</p>
-          <h2 className="mb-5 font-serif text-2xl text-[#1e3318]">
-            Farmer-facing biological interpretation
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {indicators.map((indicator) => (
-              <div
-                key={indicator.name}
-                className="flex items-start gap-3 rounded-2xl bg-[#f8f5ef] p-4"
-              >
-                <span className="shrink-0 text-2xl">{indicator.icon}</span>
-                <div>
-                  <p className="text-sm font-semibold text-[#1e3318]">{indicator.name}</p>
-                  <p className="mt-0.5 text-xs leading-5 text-[#5a6e50]">{indicator.note}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-[rgba(58,92,47,0.12)] bg-white p-7">
-          <p className="mb-4 font-mono text-xs uppercase tracking-widest text-[#5a7050]">
-            What improves
-          </p>
-          <div className="space-y-4 text-sm leading-6 text-[#5a6e50]">
-            <p>
-              SilkSoil now adapts the fungal:bacterial target to the selected production system.
-            </p>
-            <p>
-              It scores microbial abundance separately from habitat stress, so low biology is not
-              confused with low fertility alone.
-            </p>
-            <p>
-              Recommendations prioritize the constraints most likely to limit soil recovery first.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function SilkSoilCalculator({
   userName,
@@ -309,8 +203,8 @@ function SilkSoilCalculator({
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-[rgba(58,92,47,0.12)] bg-[#f0f7ed] px-6 py-4">
         <span className="text-xl">🌱</span>
         <div className="mr-auto">
-          <p className="text-sm font-semibold text-[#1e3318]">Welcome, {userName}</p>
-          <p className="text-xs text-[#5a7050]">SilkSoil - member access unlocked</p>
+          <p className="text-sm font-semibold text-[#1e3318]">Welcome, {userName ?? "Guest"}</p>
+          <p className="text-xs text-[#5a7050]">SilkSoil Analysis System</p>
         </div>
         <div className="rounded-full bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-[#4a5e40]">
           Model: {activeModelName}
@@ -643,9 +537,5 @@ function SilkSoilCalculator({
 }
 
 export function SilkSoilClient({ userName, activeFormula }: SilkSoilClientProps) {
-  if (!userName) {
-    return <SilkSoilTeaser />;
-  }
-
-  return <SilkSoilCalculator userName={userName} activeFormula={activeFormula} />;
+  return <SilkSoilCalculator userName={userName ?? "Guest"} activeFormula={activeFormula} />;
 }

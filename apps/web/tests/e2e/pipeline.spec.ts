@@ -1,19 +1,21 @@
 import { expect, test } from "@playwright/test";
+import { loginViaUi, logoutViaUi, registerViaUi } from "./auth-helpers";
 
 test.describe("End-to-End Simulation Pipeline", () => {
   test.setTimeout(120_000);
 
   test("should allow a user to create a project, sample, scenario, and run", async ({ page }) => {
     const timestamp = Date.now();
-    const registerResponse = await page.request.post("/api/bio/auth/register", {
-      data: {
-        name: "E2E Pipeline User",
-        organization_name: "QA",
-        email: `pipeline-e2e-${timestamp}@example.com`,
-        password: "Password123!",
-      },
-    });
-    expect(registerResponse.ok()).toBeTruthy();
+    const user = {
+      email: `pipeline-e2e-${timestamp}@example.com`,
+      password: "Password123!",
+      name: "E2E Pipeline User",
+      organization: "QA",
+    };
+
+    await registerViaUi(page, user);
+    await logoutViaUi(page);
+    await loginViaUi(page, user);
 
     await page.goto("/projects/new");
     await expect(page).toHaveURL(/\/projects\/new$/);

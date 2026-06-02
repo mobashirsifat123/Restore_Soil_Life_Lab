@@ -1,0 +1,13 @@
+[build]
+  # Tell Netlify that this is a Next.js app located in apps/web
+  # This is REQUIRED for Netlify to auto-detect Next.js and apply its Next.js Runtime
+  base = "apps/web"
+  
+  # The build command to run inside apps/web
+  command = "pnpm run build"
+  
+  # The publish directory is relative to the base directory
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
