@@ -14,7 +14,7 @@ const ARTICLES = [
     readTime: "8 min read",
     excerpt:
       "How Andhra Pradesh's APCNF program reached 851,000 farming households by working with nature instead of against it — with 27% higher net profits and healthier soil.",
-    image: "/images/article-india-farming.png",
+    image: "/images/article-india-farming.webp",
     imageAlt: "Indian farmer tending crops in lush terraced rice fields",
   },
   {
@@ -25,7 +25,7 @@ const ARTICLES = [
     readTime: "7 min read",
     excerpt:
       "Every kitchen generates soil gold. With earthworms and organic matter, household vermicomposting converts scraps into biologically active compost richer than anything you can buy.",
-    image: "/images/article-vermicomposting.png",
+    image: "/images/article-vermicomposting.webp",
     imageAlt: "Wooden compost bin with red earthworms on rich dark soil and vegetable scraps",
   },
   {
@@ -36,7 +36,7 @@ const ARTICLES = [
     readTime: "10 min read",
     excerpt:
       "Chinese soil scientist Guangjiong Hou and Swiss agroforester Ernst Götsch worked on opposite sides of the globe but arrived at the same answer: cooperate with nature.",
-    image: "/images/article-china-brazil-agroforestry.png",
+    image: "/images/article-china-brazil-agroforestry.webp",
     imageAlt: "Aerial view of rice paddies beside tropical forest illustrating syntropic contrast",
   },
   {
@@ -47,7 +47,7 @@ const ARTICLES = [
     readTime: "6 min read",
     excerpt:
       "A seedling growing from dark organic soil tells a story of regeneration. Learn the step-by-step process of setting up your first worm bin and building living soil at home.",
-    image: "/images/article-seedling-soil.png",
+    image: "/images/article-seedling-soil.webp",
     imageAlt: "Young green seedling growing in rich organic soil in a terracotta pot",
   },
 ];

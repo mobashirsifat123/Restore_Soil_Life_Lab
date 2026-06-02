@@ -1327,3 +1327,35 @@ body::after {
     transition: none !important;
   }
 }
+
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+  .problem-article-section::before,
+  .science-article-reader::before {
+    animation: none;
+  }
+
+  .article-spotlight,
+  .article-tile {
+    perspective: none;
+  }
+
+  .article-spotlight-inner,
+  .article-tile-inner {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .article-cursor-glow {
+    display: none;
+  }
+
+  .article-gradient {
+    transition: none;
+  }
+
+  .science-rendered-page {
+    box-shadow:
+      0 18px 46px rgba(3, 8, 4, 0.34),
+      0 0 0 1px rgba(226, 236, 216, 0.1);
+  }
+}

@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@bio/api-client", "@bio/design-tokens", "@bio/ui"],
   reactStrictMode: true,
   poweredByHeader: false,
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

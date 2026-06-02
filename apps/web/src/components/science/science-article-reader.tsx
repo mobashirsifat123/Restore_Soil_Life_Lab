@@ -20,7 +20,10 @@ export function ScienceArticleReader({
   readTime,
   published,
 }: ScienceArticleReaderProps) {
-  const pages = Array.from({ length: pageCount }, (_, index) => `${pageImageBase}/page-${index + 1}.png`);
+  const pages = Array.from(
+    { length: pageCount },
+    (_, index) => `${pageImageBase}/page-${index + 1}.webp`,
+  );
 
   return (
     <main className="science-article-reader min-h-[calc(100svh-92px)] px-6 py-10 md:py-14">
@@ -59,7 +62,8 @@ export function ScienceArticleReader({
               height={1754}
               priority={index === 0}
               loading={index === 0 ? "eager" : "lazy"}
-              unoptimized
+              quality={90}
+              sizes="(min-width: 1024px) 980px, calc(100vw - 48px)"
               className="science-rendered-page"
             />
           ))}

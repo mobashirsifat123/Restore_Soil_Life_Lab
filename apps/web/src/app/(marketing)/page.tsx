@@ -31,7 +31,7 @@ const FALLBACK_PROBLEMS: HomeProblem[] = [
     body: "How Andhra Pradesh's APCNF program reached 851,000 farming households by working with nature instead of against it.",
     icon: "shield",
     link: "/science/agricultural-revolution-india",
-    image: "/images/article-india-farming.png",
+    image: "/images/article-india-farming.webp",
   },
   {
     title: "Turning Waste into Life: Household Vermicomposting",
@@ -39,7 +39,7 @@ const FALLBACK_PROBLEMS: HomeProblem[] = [
     body: "Every kitchen generates soil gold. Learn how household vermicomposting converts scraps into biologically active compost.",
     icon: "yield",
     link: "/science/household-vermicomposting",
-    image: "/images/article-vermicomposting.png",
+    image: "/images/article-vermicomposting.webp",
   },
   {
     title: "From China to Brazil: Two Paths, One Wisdom",
@@ -47,7 +47,7 @@ const FALLBACK_PROBLEMS: HomeProblem[] = [
     body: "Chinese soil scientist Guangjiong Hou and Swiss agroforester Ernst Götsch arrived at the same answer: cooperate with nature.",
     icon: "ecosystem",
     link: "/science/china-brazil-two-paths",
-    image: "/images/article-china-brazil-agroforestry.png",
+    image: "/images/article-china-brazil-agroforestry.webp",
   },
   {
     title: "From Kitchen Scraps to Soil Gold",
@@ -55,7 +55,7 @@ const FALLBACK_PROBLEMS: HomeProblem[] = [
     body: "A seedling growing from dark organic soil tells a story of regeneration. Set up your first worm bin at home.",
     icon: "structure",
     link: "/science/soil-organic-matter-seedling",
-    image: "/images/article-seedling-soil.png",
+    image: "/images/article-seedling-soil.webp",
   },
 ];
 
